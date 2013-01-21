@@ -41,30 +41,16 @@ if (defined('WB_PATH')) {
 }
 // end include class.secure.php
 
-if ( !defined('WB_PATH')) die(header('Location: ../../index.php'));
+if ( !defined('LEPTON_PATH')) die(header('Location: ../../index.php'));
 
-$mod_headers = array(
-    'backend' => array(
-        'js' => array(
-            '/modules/ckeditor4/ckeditor/ckeditor.js',
-            '/modules/lib_jquery/plugins/leptranslate/leptranslate.js',
-        ),
-        'css' => array(
-            array(
-                'media' => 'screen',
-                'file'  => '/modules/ckeditor4/css/editor.css',
-            ),
-        ),
-    ),
+$LANG = array(
+    'Choose a DropLep' => 'DropLep wählen',
+    'Available DropLeps' => 'Verfügbare DropLeps',
+    'Comment' => 'Kommentar',
+    'autoParagraph' => 'Bestimmt, ob Inline-Inhalte innerhalb des Body in Blöcke eingefaßt werden.',
+    'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
+    . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
+        =>  'CKEditor v4.0 besitzt keine traditionellen Toolbars mehr. Lesen Sie die Dokumentation unter '
+          . '<a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">http://docs.ckeditor.com/#!/guide/dev_toolbar</a>'
+          . ' für nähere Informationen.',
 );
-
-if(file_exists(LEPTON_PATH.'/modules/ckeditor4/css/editor_custom.css'))
-{
-    array_push(
-        $mod_headers['backend']['css'],
-        array(
-            'media' => 'screen',
-            'file'  => '/modules/ckeditor4/css/editor_custom.css',
-        )
-    );
-}

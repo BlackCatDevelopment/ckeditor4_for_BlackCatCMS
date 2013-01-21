@@ -54,6 +54,8 @@ require sanitize_path(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_bas
 final class c_editor extends c_editor_base
 {
 
+    private $default_skin = 'moono';
+
     public function getSkinPath()
     {
         return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/skins'));
@@ -65,6 +67,13 @@ final class c_editor extends c_editor_base
         return $admin->lang->translate(
             'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
             . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
+        );
+    }
+
+    public function getAdditionalSettings()
+    {
+        return array(
+            array( 'name' => 'autoParagraph', 'type' => 'boolean', 'default' => 'false' )
         );
     }
 
