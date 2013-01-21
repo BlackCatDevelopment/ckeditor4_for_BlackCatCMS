@@ -8,6 +8,17 @@
  *
  */
 
+function i18n( string, elem, attributes ) {
+    if(typeof leptranslate == 'function') {
+        return leptranslate( string, elem, attributes, "ckeditor4" );
+    }
+    else {
+        if ( typeof elem != 'undefined' && typeof elem != '' ) {
+	        jQuery(elem).append(string);
+        }
+    }
+}
+
 CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'dropleps' ) + 'dialogs/dropleps.php' );
     var itemNodes = xml.selectNodes( 'data/element' );
