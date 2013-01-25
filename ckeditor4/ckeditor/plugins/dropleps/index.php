@@ -1,13 +1,14 @@
 <?php
 
 /**
- *   @author          LEPTON v2.0 Black Cat Edition Development
- *   @copyright       2013, LEPTON v2.0 Black Cat Edition Development
- *   @link            http://www.lepton2.org
- *   @license         http://www.gnu.org/licenses/gpl.html
- *   @category        LEPTON2BCE_Modules
- *   @package         ckeditor4
- *
+ *  @module         ckeditor
+ *  @version        see info.php of this module
+ *  @authors        Dietrich Roland Pehlke
+ *  @copyright      2010-2011 Dietrich Roland Pehlke
+ *  @license        GNU General Public License
+ *  @license terms  see info.php of this module
+ *  @platform       see info.php of this module
+ *  @requirements   PHP 5.2.x and higher
  */
 
 header('Location: ../../../../../index.php');

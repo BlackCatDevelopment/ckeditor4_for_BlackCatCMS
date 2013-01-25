@@ -8,14 +8,12 @@
  *
  */
 
-function i18n( string, elem, attributes ) {
+function i18n( string ) {
     if(typeof leptranslate == 'function') {
-        return leptranslate( string, elem, attributes, "ckeditor4" );
+        return leptranslate( string, '', '', 'ckeditor4' );
     }
     else {
-        if ( typeof elem != 'undefined' && typeof elem != '' ) {
-	        jQuery(elem).append(string);
-        }
+        return string;
     }
 }
 
@@ -32,7 +30,7 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     }
 
     return {
-        title: 'Choose a DropLep',
+        title: i18n('Choose a DropLep'),
         minWidth: 400,
         minHeight: 200,
         resizable: CKEDITOR.DIALOG_RESIZE_NONE,
@@ -45,14 +43,12 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
         contents: [
             {
                 id:         'tab1',
-                label:      i18n('Choose a DropLep','#cke_dialog_title_75'),
-                title:      'Choose a DropLep',
                 accessKey:  'C',
                 elements: [
                     {
                         id          : 'dropleps',
                         type        : 'select',
-                        label       : i18n('Available DropLeps','#cke_81_label'),
+                        label       : 'Available DropLeps',
                         labelLayout : 'horizontal',
                         items       : items,
                         onMouseUp: function() {
@@ -61,6 +57,7 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
                             document.getElementById("droplep_comment").innerHTML = comments[droplep_name];
 						},
 						onShow: function() {
+                            this.setLabel(i18n('Available DropLeps'));
 							this.onMouseUp();
 						}
                     },
@@ -82,3 +79,16 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     };
 });
 
+function getMethods(obj) {
+  var result = [];
+  for (var id in obj) {
+    try {
+      if (typeof(obj[id]) == "function") {
+        result.push(id + ": " + obj[id].toString() + "\n");
+      }
+    } catch (err) {
+      result.push(id + ": inaccessible");
+    }
+  }
+  return result;
+}
