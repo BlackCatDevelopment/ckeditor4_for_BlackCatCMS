@@ -41,11 +41,15 @@ $pages = $pg->make_list();
 
 // List helper
 require dirname(__FILE__).'/../../../../../../framework/LEPTON/Helper/ListBuilder.php';
-$list = new LEPTON_Helper_ListBuilder(array('__id_key'=>'page_id','__title_key'=>'page_title','__select_class'=>'cke_dialog_ui_input_select','space'=>'--'));
+$list = new LEPTON_Helper_ListBuilder(array('__id_key'=>'page_id'));
+$items = $list->sort( $pages, 0 );
 
 header( "Cache-Control: no-cache, must-revalidate" );
 header( "Pragma: no-cache" );
 header( "Content-Type: text/xml; charset:utf-8;" );
 echo '<?'.'xml version="1.0" encoding="utf-8"'.'?'.'><data>';
-echo '<pageslist>', html_entity_decode( $list->dropdown( 'pageslist', $pages, 0 ) ), '</pageslist>';
-echo '</data>';
+echo '<pageslist>';
+foreach( $items as $i => $item ) {
+    echo '<item id="'.$item['page_id'].'" value="'.$item['menu_title'].'" />';
+}
+echo '</pageslist></data>';

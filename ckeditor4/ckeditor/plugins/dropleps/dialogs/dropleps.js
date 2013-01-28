@@ -27,7 +27,7 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
         resizable: CKEDITOR.DIALOG_RESIZE_NONE,
         onOk: function() {
             var dialog = this;
-         	var droplep_name = dialog.getValueOf( 'tab1', 'dropleps' )
+         	var droplep_name = dialog.getValueOf( 'tab1', 'dropleps' );
             editor.insertText( droplep_name );
 			return true;
         },
