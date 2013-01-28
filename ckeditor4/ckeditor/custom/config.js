@@ -8,8 +8,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// For the complete reference:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-    config.extraPlugins = 'ajax,xml,dropleps';
-    config.removePlugins = 'placeholder';
+    config.extraPlugins = 'ajax,xml,dropleps,cmsplink';
+    config.removePlugins = 'placeholder,confighelper';
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [

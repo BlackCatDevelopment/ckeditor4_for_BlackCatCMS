@@ -8,15 +8,6 @@
  *
  */
 
-function i18n( string ) {
-    if(typeof leptranslate == 'function') {
-        return leptranslate( string, '', '', 'ckeditor4' );
-    }
-    else {
-        return string;
-    }
-}
-
 CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'dropleps' ) + 'dialogs/dropleps.php' );
     var itemNodes = xml.selectNodes( 'data/element' );
@@ -30,7 +21,7 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     }
 
     return {
-        title: i18n('Choose a DropLep'),
+        title: editor.lang.dropleps.title,
         minWidth: 400,
         minHeight: 200,
         resizable: CKEDITOR.DIALOG_RESIZE_NONE,
@@ -48,7 +39,7 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
                     {
                         id          : 'dropleps',
                         type        : 'select',
-                        label       : 'Available DropLeps',
+                        label       : editor.lang.dropleps.label,
                         labelLayout : 'horizontal',
                         items       : items,
                         onMouseUp: function() {
@@ -57,7 +48,6 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
                             document.getElementById("droplep_comment").innerHTML = comments[droplep_name];
 						},
 						onShow: function() {
-                            this.setLabel(i18n('Available DropLeps'));
 							this.onMouseUp();
 						}
                     },
@@ -78,17 +68,3 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
         ]
     };
 });
-
-function getMethods(obj) {
-  var result = [];
-  for (var id in obj) {
-    try {
-      if (typeof(obj[id]) == "function") {
-        result.push(id + ": " + obj[id].toString() + "\n");
-      }
-    } catch (err) {
-      result.push(id + ": inaccessible");
-    }
-  }
-  return result;
-}

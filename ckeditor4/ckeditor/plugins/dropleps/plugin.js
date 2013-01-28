@@ -9,6 +9,7 @@
  */
 
 CKEDITOR.plugins.add( 'dropleps', {
+    lang : ['en','de'],
     icons: 'dropleps',
     init: function( editor ) {
         editor.addCommand( 'droplepsDialog', new CKEDITOR.dialogCommand( 'droplepsDialog' ) );
@@ -19,4 +20,14 @@ CKEDITOR.plugins.add( 'dropleps', {
         });
         CKEDITOR.dialog.add( 'droplepsDialog', this.path + 'dialogs/dropleps.js' );
     }
+});
+
+CKEDITOR.plugins.setLang( 'dropleps', 'en', {
+    title : 'Insert DropLep',
+    label : 'Available DropLeps'
+});
+
+CKEDITOR.plugins.setLang( 'dropleps', 'de', {
+    title : 'DropLep einfügen',
+    label : 'Verfügbare DropLeps'
 });
