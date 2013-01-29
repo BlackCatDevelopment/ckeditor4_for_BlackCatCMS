@@ -15,3 +15,79 @@ Please note that this is work in progress!
 CKEditor is distributed under the GPL, LGPL and MPL Open Source licenses.
 
 This module is distributed under the GPL.
+
+# Additional plugins
+
+* dropleps
+* cmsplink
+
+# Original plugins list
+
+* a11yhelp
+* about
+* autogrow
+* basicstyles
+* blockquote
+* button
+* clipboard
+* codemirror
+* confighelper     (disabled by default)
+* contextmenu
+* devtools         (disabled by default)
+* dialog
+* dialogui
+* div
+* divarea
+* elementspath
+* enterkey
+* entities
+* fakeobjects
+* filebrowser
+* find
+* flash
+* floatingspace
+* floatpanel
+* format
+* horizontalrule
+* htmlwriter
+* image
+* indent
+* insertpre
+* justify
+* link
+* list
+* listblock
+* liststyle
+* magicline
+* maximize
+* mediaembed
+* menu
+* menubutton
+* oembed
+* pagebreak
+* panel
+* pastefromword
+* pastetext
+* placeholder      (disabled by default)
+* popup
+* removeformat
+* resize
+* richcombo
+* save
+* scayt
+* showblocks
+* showborders
+* sourcearea
+* specialchar
+* stylescombo
+* tab
+* table
+* tabletools
+* toolbar
+* uicolor
+* undo
+* wordcount
+* wsc
+* wysiwygarea
+
+Please note that some plugins are disabled by default, as they are useful for development only (devtools, confighelper) or clash with LEPTON2BCE plugins (placeholder).

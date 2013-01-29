@@ -48,6 +48,9 @@ $LANG = array(
     'Available DropLeps' => 'Verfügbare DropLeps',
     'Comment' => 'Kommentar',
     'autoParagraph' => 'Bestimmt, ob Inline-Inhalte innerhalb des Body in Blöcke eingefaßt werden.',
+    'autoGrow_minHeight' => 'Minimale Höhe des Eingabebereichs bei Verwendung von autoGrow',
+    'autoGrow_maxHeight' => 'Maximale Höhe des Eingabebereichs bei Verwendung von autoGrow',
+    'codemirror_theme' => 'CodeMirror Skin - wird bei der Quelltextansicht verwendet',
     'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
     . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
         =>  'CKEditor v4.0 besitzt keine traditionellen Toolbars mehr. Lesen Sie die Dokumentation unter '
