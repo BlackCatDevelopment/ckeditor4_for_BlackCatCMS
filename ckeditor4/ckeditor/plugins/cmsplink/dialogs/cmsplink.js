@@ -8,7 +8,7 @@
  *
  */
 
-var prefix = 'wblink_';
+var prefix = 'cmsplink';
 
 CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
     var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'cmsplink' ) + 'dialogs/cmsplink.php' );
@@ -72,7 +72,7 @@ CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
             var css_class = dialog.getValueOf( 'tab1', 'pagelinkclass' );
             var rel       = dialog.getValueOf( 'tab1', 'cmbRel' );
             var use_title = ( dialog.getValueOf( 'tab1', 'pagelinkusepagename' ) == 1 ? true : false );
-            var insert    = '<a href="'+prefix+page_id+'" title=""'+(rel==0?'':' rel="'+rel+'"')+(css_class==''?'':' class="'+css_class+'"')+'>'+(use_title?pages[page_id]:selection)+'</a>';
+            var insert    = '<a href="['+prefix+page_id+']" title="'+pages[page_id]+'"'+(rel==0?'':' rel="'+rel+'"')+(css_class==''?'':' class="'+css_class+'"')+'>'+(use_title?pages[page_id]:selection)+'</a>';
             editor.insertHtml(insert);
             return true;
         },
