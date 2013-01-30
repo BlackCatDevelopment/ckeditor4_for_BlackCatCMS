@@ -54,7 +54,7 @@ require sanitize_path(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_bas
 final class c_editor extends c_editor_base
 {
 
-    private $default_skin = 'moono';
+    protected static $default_skin = 'moono';
 
     public function getSkinPath()
     {
@@ -76,6 +76,7 @@ final class c_editor extends c_editor_base
             array( 'name' => 'autoParagraph', 'type' => 'boolean', 'default' => 'false' ),
             array( 'name' => 'autoGrow_minHeight', 'type' => 'text', 'default' => 200 ),
             array( 'name' => 'autoGrow_maxHeight', 'type' => 'text', 'default' => 400 ),
+            array( 'name' => 'contentsCss', 'type' => 'text', 'default' => 'editor.css' ),
             array( 'name' => 'codemirror_theme', 'type' => 'select', 'options' => array('default','ambiance','blackboard','cobalt','eclipse','elegant','erlang-dark','lesser-dark','monokai','neat','night','rubyblue','solarized-light','solarized-dark','twilight','vibrant-ink','xq-dark'), 'default' => 'default' ),
         );
     }

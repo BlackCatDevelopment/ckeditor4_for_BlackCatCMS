@@ -22,6 +22,28 @@
  * Configuration file for the File Manager Connector for PHP.
  */
 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+	include(WB_PATH.'/framework/class.secure.php');
+} else {
+	$root = "../";
+	$level = 1;
+	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+		$root .= "../";
+		$level += 1;
+	}
+	if (file_exists($root.'/framework/class.secure.php')) {
+		include($root.'/framework/class.secure.php');
+	} else {
+		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+	}
+}
+// end include class.secure.php
+
+if(!defined('LEPTON_PATH'))
+    require dirname(__FILE__).'/../../../../../../../../config.php';
+require_once(LEPTON_PATH .'/framework/class.admin.php');
+
 global $Config ;
 
 // SECURITY: You must explicitelly enable this "connector". (Set it to "true").
@@ -34,14 +56,10 @@ $Config['Enabled'] = false ;
 *	and has at least permissions to view the WB MEDIA folder
 *   Adapted for use with LEPTON2BCE
 */
-// include WB config.php file and admin class
-require_once('../../../../../../../config.php');
-require_once(WB_PATH .'/framework/class.admin.php');
+$base_path = str_replace('\\','/', LEPTON_PATH);
+$base_path = str_replace('//','/', LEPTON_PATH);
 
-$wb_path = str_replace('\\','/', WB_PATH);
-$wb_path = str_replace('//','/', WB_PATH);
-
-// check if user is authenticated if WB and has permission to view MEDIA folder
+// check if user is authenticated and has permission to view MEDIA folder
 $admin = new admin('Media', 'media_view', false, false);
 if(($admin->get_permission('media_view') === true))
 {
@@ -53,9 +71,9 @@ if(($admin->get_permission('media_view') === true))
 
 // Path to user files relative to the document root.
 // $Config['UserFilesPath'] = '/userfiles/' ;
-$Config['UserFilesPath'] = WB_URL.MEDIA_DIRECTORY.'/' ;
+$Config['UserFilesPath'] = LEPTON_URL.MEDIA_DIRECTORY.'/' ;
 // use home folder of current user as document root if available
-if(isset($_SESSION['HOME_FOLDER']) && file_exists($wb_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
+if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
    $Config['UserFilesPath'] = $Config['UserFilesPath'].$_SESSION['HOME_FOLDER'];
 }
 
@@ -65,9 +83,9 @@ if(isset($_SESSION['HOME_FOLDER']) && file_exists($wb_path .MEDIA_DIRECTORY .$_S
 // Attention: The above 'UserFilesPath' must point to the same directory.
 // $Config['UserFilesAbsolutePath'] = '' ;
 
-$Config['UserFilesAbsolutePath'] = $wb_path .MEDIA_DIRECTORY.'/' ;
+$Config['UserFilesAbsolutePath'] = $base_path .MEDIA_DIRECTORY.'/' ;
 // use home folder of current user as document root if available
-if(isset($_SESSION['HOME_FOLDER']) && file_exists($wb_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
+if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
    $Config['UserFilesAbsolutePath'] = $Config['UserFilesAbsolutePath'].$_SESSION['HOME_FOLDER'].'/';
 }
 

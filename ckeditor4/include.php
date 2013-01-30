@@ -41,8 +41,6 @@ if (defined('WB_PATH')) {
 }
 // end include class.secure.php
 
-if ( !defined('WB_PATH')) die(header('Location: ../../index.php'));
-
 $debug = false;
 if (true === $debug) {
 	ini_set('display_errors', 1);
@@ -65,10 +63,21 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $query  = "SELECT * from `".TABLE_PREFIX."mod_wysiwyg_admin_v2` where `editor`='".WYSIWYG_EDITOR."'";
     $result = $database->query ($query );
     $config = array();
+    $css    = array();
     if($result->numRows())
     {
         while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
         {
+            if ( $row['set_name'] == 'contentsCss' )
+            {
+                if ( substr_count($row['set_value'],',') ) {
+                    $css = explode(',',$row['set_value']);
+                }
+                else {
+                    $css = array($row['set_value']);
+                }
+                continue;
+            }
             if ( substr_count( $row['set_value'], '#####' ) ) // array values
             {
                 $row['set_value'] = explode( '#####', $row['set_value'] );
@@ -76,6 +85,35 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             $config[] = $row;
         }
     }
+
+    if(count($css))
+    {
+        foreach( $css as $i => $file )
+        {
+            if( file_exists(sanitize_path(LEPTON_PATH.'/templates/'.DEFAULT_TEMPLATE.'/'.$file)) )
+            {
+                $css[$i] = sanitize_url(LEPTON_URL.'/templates/'.DEFAULT_TEMPLATE.'/'.$file);
+            }
+            elseif( file_exists(sanitize_path(LEPTON_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file)) )
+            {
+                $css[$i] = sanitize_url(LEPTON_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file);
+            }
+            elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/custom/'.$file)) )
+            {
+                $css[$i] = sanitize_url(LEPTON_URL.'/modules/ckeditor4/config/custom/'.$file );
+            }
+            elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/default/'.$file)) )
+            {
+                $css[$i] = sanitize_url(LEPTON_URL.'/modules/ckeditor4/config/default/'.$file );
+            }
+            else
+            {
+                unset($css[$i]);
+            }
+        }
+    }
+
+
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
     echo $parser->get(
@@ -86,6 +124,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'width'   => $width,
             'height'  => $height,
             'config'  => $config,
+            'css'     => implode( '\', \'', $css ),
             'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))
         )
     );

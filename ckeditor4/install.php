@@ -40,5 +40,12 @@ if (defined('WB_PATH')) {
 	}
 }
 // end include class.secure.php 
+
+// add files to class_secure
+$addons_helper = new LEPTON_Helper_Addons();
+if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/filemanager/browser/default/connectors/php/connector.php' ) )
+{
+     error_log( "Unable to register file -connector.php-!" );
+}
  
 ?>

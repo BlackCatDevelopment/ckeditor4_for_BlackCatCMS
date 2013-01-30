@@ -5,6 +5,7 @@
         {
             baseHref: '{$LEPTON_URL}'
             ,customConfig: '{$LEPTON_URL}/modules/ckeditor4/ckeditor/custom/config.js'
+            {if $css},contentsCss : [ '{$css}' ]{/if}
             ,filebrowserBrowseUrl :'{$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Connector={$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
             ,filebrowserImageBrowseUrl : '{$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Type=Image&amp;Connector={$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
             ,filebrowserFlashBrowseUrl :'{$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Type=Flash&amp;Connector={$LEPTON_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
