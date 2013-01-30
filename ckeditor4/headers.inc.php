@@ -14,18 +14,18 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- *   @author          LEPTON v2.0 Black Cat Edition Development
- *   @copyright       2013, LEPTON v2.0 Black Cat Edition Development
- *   @link            http://www.lepton2.org
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
- *   @category        LEPTON2BCE_Modules
+ *   @category        CAT_Modules
  *   @package         ckeditor4
  *
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {
-	include(WB_PATH.'/framework/class.secure.php');
+if (defined('CAT_PATH')) {
+	include(CAT_PATH.'/framework/class.secure.php');
 } else {
 	$root = "../";
 	$level = 1;
@@ -41,13 +41,10 @@ if (defined('WB_PATH')) {
 }
 // end include class.secure.php
 
-if ( !defined('WB_PATH')) die(header('Location: ../../index.php'));
-
 $mod_headers = array(
     'backend' => array(
         'js' => array(
             '/modules/ckeditor4/ckeditor/ckeditor.js',
-            '/modules/lib_jquery/plugins/leptranslate/leptranslate.js',
         ),
         'css' => array(
             array(
