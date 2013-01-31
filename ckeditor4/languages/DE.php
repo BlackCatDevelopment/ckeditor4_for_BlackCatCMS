@@ -41,8 +41,6 @@ if (defined('CAT_PATH')) {
 }
 // end include class.secure.php
 
-if ( !defined('LEPTON_PATH')) die(header('Location: ../../index.php'));
-
 $LANG = array(
     'Choose a DropLep' => 'DropLep wählen',
     'Available DropLeps' => 'Verfügbare DropLeps',

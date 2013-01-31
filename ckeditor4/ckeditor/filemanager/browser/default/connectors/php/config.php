@@ -40,9 +40,9 @@ if (defined('CAT_PATH')) {
 }
 // end include class.secure.php
 
-if(!defined('LEPTON_PATH'))
+if(!defined('CAT_PATH'))
     require dirname(__FILE__).'/../../../../../../../../config.php';
-require_once(LEPTON_PATH .'/framework/class.admin.php');
+require_once(CAT_PATH .'/framework/class.admin.php');
 
 global $Config ;
 
@@ -54,10 +54,10 @@ $Config['Enabled'] = false ;
 *	SECURITY PATCH FOR WEBSITEBAKER (doc)
 *	only enable PHP connector if user is authenticated to WB
 *	and has at least permissions to view the WB MEDIA folder
-*   Adapted for use with LEPTON2BCE
+*   Adapted for use with BlackCat CMS
 */
-$base_path = str_replace('\\','/', LEPTON_PATH);
-$base_path = str_replace('//','/', LEPTON_PATH);
+$base_path = str_replace('\\','/', CAT_PATH);
+$base_path = str_replace('//','/', CAT_PATH);
 
 // check if user is authenticated and has permission to view MEDIA folder
 $admin = new admin('Media', 'media_view', false, false);
@@ -71,7 +71,7 @@ if(($admin->get_permission('media_view') === true))
 
 // Path to user files relative to the document root.
 // $Config['UserFilesPath'] = '/userfiles/' ;
-$Config['UserFilesPath'] = LEPTON_URL.MEDIA_DIRECTORY.'/' ;
+$Config['UserFilesPath'] = CAT_URL.MEDIA_DIRECTORY.'/' ;
 // use home folder of current user as document root if available
 if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
    $Config['UserFilesPath'] = $Config['UserFilesPath'].$_SESSION['HOME_FOLDER'];

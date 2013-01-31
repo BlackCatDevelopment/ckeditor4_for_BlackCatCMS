@@ -11,8 +11,8 @@
  */
 
 // include class.secure.php to protect this file and the whole CMS!
-if (defined('LEPTON_PATH')) {
-	include(LEPTON_PATH.'/framework/class.secure.php');
+if (defined('CAT_PATH')) {
+	include(CAT_PATH.'/framework/class.secure.php');
 } else {
 	$oneback = "../";
 	$root = $oneback;
@@ -40,8 +40,8 @@ $pg = new pages();
 $pages = $pg->make_list();
 
 // List helper
-require dirname(__FILE__).'/../../../../../../framework/LEPTON/Helper/ListBuilder.php';
-$list = new LEPTON_Helper_ListBuilder(array('__id_key'=>'page_id'));
+require dirname(__FILE__).'/../../../../../../framework/CAT/Helper/ListBuilder.php';
+$list = new CAT_Helper_ListBuilder(array('__id_key'=>'page_id'));
 $items = $list->sort( $pages, 0 );
 
 header( "Cache-Control: no-cache, must-revalidate" );

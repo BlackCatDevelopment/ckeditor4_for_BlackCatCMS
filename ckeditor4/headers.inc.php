@@ -55,7 +55,7 @@ $mod_headers = array(
     ),
 );
 
-if(file_exists(LEPTON_PATH.'/modules/ckeditor4/css/editor_custom.css'))
+if(file_exists(CAT_PATH.'/modules/ckeditor4/css/editor_custom.css'))
 {
     array_push(
         $mod_headers['backend']['css'],

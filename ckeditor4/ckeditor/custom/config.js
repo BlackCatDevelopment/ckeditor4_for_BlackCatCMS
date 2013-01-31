@@ -8,8 +8,10 @@ CKEDITOR.editorConfig = function( config ) {
 	// For the complete reference:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-    config.extraPlugins = 'ajax,xml,dropleps,cmsplink';
+    config.extraPlugins = 'ajax,xml,dropleps,cmsplink,autosave';
     config.removePlugins = 'placeholder,confighelper,devtools';
+
+    config.autosaveTargetUrl = WB_URL + '/modules/ckeditor4/ckeditor/plugins/autosave/autosave.php';
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [
@@ -31,5 +33,5 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Remove some buttons, provided by the standard plugins, which we don't
 	// need to have in the Standard(s) toolbar.
-	config.removeButtons = 'Underline,Subscript,Superscript';
+	config.removeButtons = 'Subscript,Superscript'; //Underline
 };
