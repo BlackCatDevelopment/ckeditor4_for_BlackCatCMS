@@ -41,6 +41,15 @@ if (defined('CAT_PATH')) {
 }
 // end include class.secure.php
 
+// add files to class_secure
+require CAT_PATH.'/framework/CAT/Helper/Addons.php';
+$addons_helper = new CAT_Helper_Addons();
+if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/filemanager/browser/default/connectors/php/connector.php' ) )
+{
+     echo "Unable to register file -connector.php-!";
+}
+
+
 $debug = false;
 if (true === $debug) {
 	ini_set('display_errors', 1);
