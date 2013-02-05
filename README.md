@@ -1,12 +1,12 @@
-CKEditor v4.x for LEPTON v2.0 Black Cat Edition
-===============================================
+CKEditor v4.x for Black Cat CMS
+===============================
 
-This is the CKEditor v4.x WYSIWYG module for LEPTON v2.0 Black Cat Edition. It
+This is the CKEditor v4.x WYSIWYG module for Black Cat CMS. It
 includes
 
 * CKEditor 4.0.1 (see http://ckeditor.com/);
 * a bunch of original plugins we thought to be useful;
-* some plugins created especially for use with LEPTON2BCE
+* some plugins created especially for use with Black Cat CMS
 
 Please note that this is work in progress!
 
