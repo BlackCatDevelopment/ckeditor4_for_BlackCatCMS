@@ -1,12 +1,12 @@
-CKEditor v4.x for LEPTON v2.0 Black Cat Edition
-===============================================
+CKEditor v4.x for Black Cat CMS
+===============================
 
-This is the CKEditor v4.x WYSIWYG module for LEPTON v2.0 Black Cat Edition. It
+This is the CKEditor v4.x WYSIWYG module for Black Cat CMS. It
 includes
 
 * CKEditor 4.0.1 (see http://ckeditor.com/);
 * a bunch of original plugins we thought to be useful;
-* some plugins created especially for use with LEPTON2BCE
+* some plugins created especially for use with Black Cat CMS
 
 Please note that this is work in progress!
 
@@ -20,74 +20,31 @@ This module is distributed under the GPL.
 
 * dropleps
 * cmsplink
+* autosave _(optional)_
 
 # Original plugins list
 
 * a11yhelp
 * about
-* autogrow
-* basicstyles
-* blockquote
-* button
+* ajax
+* autogrow _(optional)_
 * clipboard
-* codemirror
-* confighelper     (disabled by default)
-* contextmenu
-* devtools         (disabled by default)
+* codemirror _(optional)_
 * dialog
-* dialogui
-* div
-* divarea
-* elementspath
-* enterkey
-* entities
 * fakeobjects
-* filebrowser
-* find
 * flash
-* floatingspace
-* floatpanel
-* format
-* horizontalrule
-* htmlwriter
 * image
-* indent
-* insertpre
-* justify
+* insertpre _(optional)_
 * link
-* list
-* listblock
-* liststyle
 * magicline
-* maximize
-* mediaembed
-* menu
-* menubutton
-* oembed
-* pagebreak
-* panel
+* oembed _(optional)_
 * pastefromword
-* pastetext
-* placeholder      (disabled by default)
-* popup
-* removeformat
-* resize
-* richcombo
-* save
 * scayt
-* showblocks
-* showborders
-* sourcearea
 * specialchar
-* stylescombo
-* tab
 * table
 * tabletools
-* toolbar
-* uicolor
-* undo
-* wordcount
 * wsc
-* wysiwygarea
+* xml
 
-Please note that some plugins are disabled by default, as they are useful for development only (devtools, confighelper) or clash with LEPTON2BCE plugins (placeholder).
+Please note that some of the plugins are treated as optional, so you will have
+to enable them first.
