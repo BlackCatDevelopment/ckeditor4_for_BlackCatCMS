@@ -45,10 +45,13 @@ $LANG = array(
     'Choose a DropLep' => 'DropLep wählen',
     'Available DropLeps' => 'Verfügbare DropLeps',
     'Comment' => 'Kommentar',
+    'insertpre_class' => 'CSS Klasse für &lt;pre&gt; Element',
+    'insertpre_style' => 'Style-Angabe(n) für &lt;pre&gt; Element',
     'autoParagraph' => 'Bestimmt, ob Inline-Inhalte innerhalb des Body in Blöcke eingefaßt werden.',
-    'autoGrow_minHeight' => 'Minimale Höhe des Eingabebereichs bei Verwendung von autoGrow',
-    'autoGrow_maxHeight' => 'Maximale Höhe des Eingabebereichs bei Verwendung von autoGrow',
-    'codemirror_theme' => 'CodeMirror Skin - wird bei der Quelltextansicht verwendet',
+    'autoGrow_minHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Minimale Höhe des Eingabebereichs bei Verwendung von autoGrow',
+    'autoGrow_maxHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Maximale Höhe des Eingabebereichs bei Verwendung von autoGrow',
+    'autoGrow_onStartup' => '<span style="color:red;">Erfordert autogrow Plugin</span> Beim Start ausführen',
+    'codemirror_theme' => '<span style="color:red;">erfordert codemirror Plugin</span> CodeMirror Skin - wird bei der Quelltextansicht verwendet',
     'contentsCss' => 'CSS Datei(en) für das Styling der Editorinhalte. Diese sollte(n) zum Frontend-Template passen. Mehrere Dateien mit Komma separieren.',
     'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
     . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'

@@ -73,6 +73,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $result = $database->query ($query );
     $config = array();
     $css    = array();
+    $plugins = NULL;
     if($result->numRows())
     {
         while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
@@ -85,6 +86,11 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
                 else {
                     $css = array($row['set_value']);
                 }
+                continue;
+            }
+            if ( $row['set_name'] == 'plugins' )
+            {
+                $plugins = $row['set_value'];
                 continue;
             }
             if ( substr_count( $row['set_value'], '#####' ) ) // array values
@@ -133,6 +139,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'width'   => $width,
             'height'  => $height,
             'config'  => $config,
+            'plugins' => $plugins,
             'css'     => implode( '\', \'', $css ),
             'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))
         )

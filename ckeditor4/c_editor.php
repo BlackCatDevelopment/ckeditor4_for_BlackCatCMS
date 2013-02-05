@@ -53,10 +53,16 @@ final class c_editor extends c_editor_base
 {
 
     protected static $default_skin = 'moono';
+    protected static $editor_package = 'standard';
 
     public function getSkinPath()
     {
         return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/skins'));
+    }
+
+    public function getPluginsPath()
+    {
+        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/plugins'));
     }
 
     public function getToolbars()
@@ -71,12 +77,32 @@ final class c_editor extends c_editor_base
     public function getAdditionalSettings()
     {
         return array(
-            array( 'name' => 'autoParagraph', 'type' => 'boolean', 'default' => 'false' ),
-            array( 'name' => 'autoGrow_minHeight', 'type' => 'text', 'default' => 200 ),
-            array( 'name' => 'autoGrow_maxHeight', 'type' => 'text', 'default' => 400 ),
-            array( 'name' => 'contentsCss', 'type' => 'text', 'default' => 'editor.css' ),
-            array( 'name' => 'codemirror_theme', 'type' => 'select', 'options' => array('default','ambiance','blackboard','cobalt','eclipse','elegant','erlang-dark','lesser-dark','monokai','neat','night','rubyblue','solarized-light','solarized-dark','twilight','vibrant-ink','xq-dark'), 'default' => 'default' ),
+            array( 'name' => 'autoParagraph'     , 'type' => 'boolean', 'default' => 'false'      ),
+            array( 'name' => 'contentsCss'       , 'type' => 'text'   , 'default' => 'editor.css' ),
+            array( 'name' => 'insertpre_class'   , 'type' => 'text'   , 'default' => ''           ),
+            array( 'name' => 'insertpre_style'   , 'type' => 'text'   , 'default' => ''           ),
+
+            array( 'name' => 'autoGrow_minHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 200          ),
+            array( 'name' => 'autoGrow_maxHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 400          ),
+            array( 'name' => 'autoGrow_onStartup', 'requires' => 'autogrow', 'type' => 'boolean', 'default' => 'true'       ),
+            array( 'name' => 'codemirror_theme'  , 'requires' => 'codemirror', 'type' => 'select' , 'default' => 'default',
+                'options' => array('default','ambiance','blackboard','cobalt','eclipse','elegant','erlang-dark','lesser-dark','monokai','neat','night','rubyblue','twilight','vibrant-ink','xq-dark')
+            ),
         );
+    }
+
+    public function getAdditionalPlugins()
+    {
+        global $admin;
+        $defaults = array( 'ajax', 'a11yhelp', 'about', 'clipboard', 'cmsplink', 'dialog', 'dropleps',
+                           'fakeobjects', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
+                           'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
+        $path     = $this->getPluginsPath();
+        $subs     = $admin->get_helper('Directory')->setRecursion(false)->getDirectories( $path, $path.'/' );
+        // remove defaults from subs
+        $plugins  = array_diff($subs,$defaults);
+        if(count($plugins)) return $plugins;
+        return array();
     }
 
 }
