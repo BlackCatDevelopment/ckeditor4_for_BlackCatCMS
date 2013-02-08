@@ -78,6 +78,7 @@ final class c_editor extends c_editor_base
     {
         return array(
             array( 'name' => 'autoParagraph'     , 'type' => 'boolean', 'default' => 'false'      ),
+            array( 'name' => 'emailProtection'   , 'type' => 'select' , 'options' => array( '', 'encode' ), 'default' => 'encode' ),
             array( 'name' => 'contentsCss'       , 'type' => 'text'   , 'default' => 'editor.css' ),
             array( 'name' => 'insertpre_class'   , 'type' => 'text'   , 'default' => ''           ),
             array( 'name' => 'insertpre_style'   , 'type' => 'text'   , 'default' => ''           ),
