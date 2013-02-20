@@ -47,4 +47,8 @@ This module is distributed under the GPL.
 * xml
 
 Please note that some of the plugins are treated as optional, so you will have
+<<<<<<< HEAD
 to enable them first.
+=======
+to enable them first.
+>>>>>>> 77284fac55e69c2d5d1dc6da3c17916296c97a91
