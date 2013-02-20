@@ -43,8 +43,8 @@ if (defined('CAT_PATH')) {
 
 // Checking Requirements
 
-$PRECHECK['VERSION']        = array(
-    'VERSION' => '2.0',
+$PRECHECK['CAT_VERSION']        = array(
+    'VERSION'  => '1.0',
     'OPERATOR' => '>='
 );
 

@@ -12,6 +12,22 @@ var prefix = 'cmsplink';
 
 CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
     var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'cmsplink' ) + 'dialogs/cmsplink.php' );
+    if ( xml === null ) {
+        return {
+            title: editor.lang.cmsplink.title,
+            minWidth: 380,
+            minHeight: 130,
+            contents: [{
+                id: 'tab1',
+                label: 'Tab1',
+                title: 'Tab1',
+                elements : [{
+                    type: 'html',
+                    html: '<div class="error">Error loading pages list!</div>'
+                }],
+            }]
+        };
+    }
     var itemNodes = xml.selectNodes( 'data/pageslist/item' );
     var items = new Array();    // items array
     var pages = new Array();
@@ -67,13 +83,19 @@ CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
         }], // end contents
         onOk: function() {
             var dialog    = this;
-            var selection = editor.getSelection().getSelectedText();
+            var selection = editor.getSelection().getSelectedElement();
             var page_id   = dialog.getValueOf( 'tab1', 'pageslist' );
+            var use_title = ( dialog.getValueOf( 'tab1', 'pagelinkusepagename' ) == 1 ? true : false );
+            if ( selection === null ) {
+                var html  = ( use_title ? pages[page_id] : editor.getSelection().getSelectedText() );
+                selection = CKEDITOR.dom.element.createFromHtml( html );
+            }
             var css_class = dialog.getValueOf( 'tab1', 'pagelinkclass' );
             var rel       = dialog.getValueOf( 'tab1', 'cmbRel' );
-            var use_title = ( dialog.getValueOf( 'tab1', 'pagelinkusepagename' ) == 1 ? true : false );
-            var insert    = '<a href="['+prefix+page_id+']" title="'+pages[page_id]+'"'+(rel==0?'':' rel="'+rel+'"')+(css_class==''?'':' class="'+css_class+'"')+'>'+(use_title?pages[page_id]:selection)+'</a>';
-            editor.insertHtml(insert);
+            var insert    = '<a href="['+prefix+page_id+']" title="'+pages[page_id]+'"'+(rel==0?'':' rel="'+rel+'"')+(css_class==''?'':' class="'+css_class+'"')+'></a>';
+            var element   = CKEDITOR.dom.element.createFromHtml(insert);
+            selection.appendTo(element);
+            editor.insertElement(element);
             return true;
         },
         resizable: 3
