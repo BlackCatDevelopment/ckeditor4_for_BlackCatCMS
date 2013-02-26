@@ -23,7 +23,6 @@
  *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
 if (defined('CAT_PATH')) {
 	include(CAT_PATH.'/framework/class.secure.php');
 } else {
@@ -39,7 +38,6 @@ if (defined('CAT_PATH')) {
 		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 	}
 }
-// end include class.secure.php
 
 $debug = false;
 if (true === $debug) {
@@ -81,7 +79,6 @@ final class c_editor extends c_editor_base
             array( 'name' => 'contentsCss'       , 'type' => 'text'   , 'default' => 'editor.css' ),
             array( 'name' => 'insertpre_class'   , 'type' => 'text'   , 'default' => ''           ),
             array( 'name' => 'insertpre_style'   , 'type' => 'text'   , 'default' => ''           ),
-
             array( 'name' => 'autoGrow_minHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 200          ),
             array( 'name' => 'autoGrow_maxHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 400          ),
             array( 'name' => 'autoGrow_onStartup', 'requires' => 'autogrow', 'type' => 'boolean', 'default' => 'true'       ),
@@ -98,7 +95,7 @@ final class c_editor extends c_editor_base
                            'fakeobjects', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
                            'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
         $path     = $this->getPluginsPath();
-        $subs     = $admin->get_helper('Directory')->setRecursion(false)->getDirectories( $path, $path.'/' );
+        $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
         // remove defaults from subs
         $plugins  = array_diff($subs,$defaults);
         if(count($plugins)) return $plugins;
