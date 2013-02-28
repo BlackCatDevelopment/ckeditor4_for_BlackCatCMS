@@ -36,7 +36,7 @@ require_once('../../../../../../config.php');
 
 // get pages
 require dirname(__FILE__).'/../../../../../../framework/CAT/Pages.php';
-$pg = CAT_Pages::getInstance();
+$pg = CAT_Pages::getInstance(-1);
 $pages = $pg->make_list();
 
 // List helper

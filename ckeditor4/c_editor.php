@@ -93,7 +93,7 @@ final class c_editor extends c_editor_base
         global $admin;
         $defaults = array( 'ajax', 'a11yhelp', 'about', 'clipboard', 'cmsplink', 'dialog', 'dropleps',
                            'fakeobjects', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
-                           'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
+                           'panelbutton', 'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
         $path     = $this->getPluginsPath();
         $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
         // remove defaults from subs
