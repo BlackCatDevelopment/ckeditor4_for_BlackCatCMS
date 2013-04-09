@@ -56,8 +56,7 @@ $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`edit
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'width', '100%');" );
 
 // add files to class_secure
-require CAT_PATH.'/framework/CAT/Helper/Addons.php';
-$addons_helper = new CAT_Helper_Addons();
+$addons_helper = CAT_Helper_Addons::getInstance();
 if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/filemanager/browser/default/connectors/php/connector.php' ) )
 {
      error_log( "Unable to register file -connector.php-!" );
