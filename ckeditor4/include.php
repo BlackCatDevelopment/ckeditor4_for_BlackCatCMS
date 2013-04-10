@@ -74,6 +74,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $config = array();
     $css    = array();
     $plugins = NULL;
+    $filemanager_include = NULL;
     if($result->numRows())
     {
         while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
@@ -91,6 +92,20 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             if ( $row['set_name'] == 'plugins' )
             {
                 $plugins = $row['set_value'];
+                continue;
+            }
+            if ( $row['set_name'] == 'filemanager' )
+            {
+                $infofile = sanitize_path(dirname(__FILE__).'/ckeditor/filemanager/'.$row['set_value'].'/info.php');
+                if(file_exists($infofile))
+                {
+                    $filemanager_include = NULL;
+                    @include $infofile;
+                    if($filemanager_include)
+                    {
+                        $filemanager_include = str_replace('{$CAT_URL}',CAT_URL,$filemanager_include);
+                    }
+                }
                 continue;
             }
             if ( substr_count( $row['set_value'], '#####' ) ) // array values
@@ -140,6 +155,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'height'  => $height,
             'config'  => $config,
             'plugins' => $plugins,
+            'filemanager_include' => $filemanager_include,
             'css'     => implode( '\', \'', $css ),
             'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))
         )

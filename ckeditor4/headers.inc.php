@@ -52,6 +52,7 @@ $mod_headers = array(
                 'file'  => '/modules/ckeditor4/css/editor.css',
             ),
         ),
+        'jquery' => array( 'core' => true ),
     ),
 );
 

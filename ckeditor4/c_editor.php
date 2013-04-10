@@ -53,6 +53,11 @@ final class c_editor extends c_editor_base
     protected static $default_skin = 'moono';
     protected static $editor_package = 'standard';
 
+    public function getFilemanagerPath()
+    {
+        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/filemanager'));
+    }
+
     public function getSkinPath()
     {
         return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/skins'));
