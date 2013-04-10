@@ -6,9 +6,7 @@
             baseHref: '{$CAT_URL}'
             ,customConfig: '{$CAT_URL}/modules/ckeditor4/ckeditor/custom/config.js'
             {if $css},contentsCss : [ '{$css}' ]{/if}
-            ,filebrowserBrowseUrl :'{$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Connector={$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
-            ,filebrowserImageBrowseUrl : '{$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Type=Image&amp;Connector={$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
-            ,filebrowserFlashBrowseUrl :'{$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/browser.html?Type=Flash&amp;Connector={$CAT_URL}/modules/ckeditor4/ckeditor/filemanager/browser/default/connectors/php/connector.php'
+            {$filemanager_include}
             {foreach $config cfg}
             ,{$cfg.set_name}: {if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}{$cfg.set_value}{if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}
             {/foreach}
