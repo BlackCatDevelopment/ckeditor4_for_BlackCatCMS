@@ -23,7 +23,6 @@
  *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
 if (defined('CAT_PATH')) {	
 	include(CAT_PATH.'/framework/class.secure.php'); 
 } else {
@@ -39,16 +38,6 @@ if (defined('CAT_PATH')) {
 		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 	}
 }
-// end include class.secure.php
-
-// add files to class_secure
-require CAT_PATH.'/framework/CAT/Helper/Addons.php';
-$addons_helper = new CAT_Helper_Addons();
-if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/filemanager/browser/default/connectors/php/connector.php' ) )
-{
-     echo "Unable to register file -connector.php-!";
-}
-
 
 $debug = false;
 if (true === $debug) {
@@ -74,7 +63,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $config = array();
     $css    = array();
     $plugins = NULL;
-    $filemanager_include = NULL;
+    $filemanager_dirname = $filemanager_include = $filemanager_plugin = NULL;
     if($result->numRows())
     {
         while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
@@ -96,7 +85,8 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             }
             if ( $row['set_name'] == 'filemanager' )
             {
-                $infofile = sanitize_path(dirname(__FILE__).'/ckeditor/filemanager/'.$row['set_value'].'/info.php');
+                $filemanager_dirname = $row['set_value'];
+                $infofile = sanitize_path(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
                 if(file_exists($infofile))
                 {
                     $filemanager_include = NULL;
@@ -143,6 +133,12 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
         }
     }
 
+    if($filemanager_plugin)
+    {
+        $plugins = ( $plugins == '' )
+                 ? $filemanager_plugin
+                 : $plugins.','.$filemanager_plugin;
+    }
 
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
