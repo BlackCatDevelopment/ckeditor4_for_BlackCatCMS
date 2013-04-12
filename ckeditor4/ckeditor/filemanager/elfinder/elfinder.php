@@ -12,6 +12,7 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo CAT_URL ?>/modules/lib_jquery/jquery-ui/themes/base/jquery-ui.css">
 		<script type="text/javascript" src="<?php echo CAT_URL ?>/modules/lib_jquery/jquery-core/jquery-core.min.js"></script>
 		<script type="text/javascript" src="<?php echo CAT_URL ?>/modules/lib_jquery/jquery-ui/ui/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="<?php echo CAT_URL ?>/modules/lib_jquery/plugins/jquery.migrate/jquery.migrate.js"></script>
 
 		<!-- elFinder CSS (REQUIRED) -->
 		<link rel="stylesheet" type="text/css" media="screen" href="css/elfinder.min.css">

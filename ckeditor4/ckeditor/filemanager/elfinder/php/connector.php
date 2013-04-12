@@ -97,6 +97,7 @@ $opts = array(
                 ),
         	),
             'uploadAllow' => array(),
+            'uploadOrder' => array('allow', 'deny'),
 		),
 	),
 );
@@ -116,10 +117,7 @@ if($val->sanitizeGet('mode'))
                     'write' => true,
                 )
             );
-            array_push(
-                $opts['roots'][0]['uploadAllow'],
-                array('image') # allow any images
-            );
+            $opts['roots'][0]['uploadAllow'] = array('image');
             break;
         case 'flash':
             array_push( // show flash only
