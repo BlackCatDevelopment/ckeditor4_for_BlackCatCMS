@@ -70,8 +70,7 @@ final class c_editor extends c_editor_base
 
     public function getToolbars()
     {
-        global $admin;
-        return $admin->lang->translate(
+        return CAT_Helper_Widget::getInstance()->lang()->translate(
             'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
             . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
         );
@@ -95,10 +94,9 @@ final class c_editor extends c_editor_base
 
     public function getAdditionalPlugins()
     {
-        global $admin;
-        $defaults = array( 'ajax', 'a11yhelp', 'about', 'clipboard', 'cmsplink', 'dialog', 'dropleps',
-                           'fakeobjects', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
-                           'panelbutton', 'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
+        $defaults = array( 'ajax', 'a11yhelp', 'about', 'clipboard', 'cmsplink', 'dialog', 'droplets',
+                           'fakeobjects', 'floatpanel', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
+                           'panel', 'panelbutton', 'richcombo', 'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
         $path     = $this->getPluginsPath();
         $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
         // remove defaults from subs

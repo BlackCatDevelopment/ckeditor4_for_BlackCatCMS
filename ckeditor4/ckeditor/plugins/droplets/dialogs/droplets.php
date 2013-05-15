@@ -16,7 +16,7 @@ require_once('../../../../../../config.php');
 /**
  * cleanup some items that may cause problems
  */
-function droplep_clean_str(&$aStr) {
+function droplet_clean_str(&$aStr) {
 	$vars = array(
 		'"' => "\\\"",
 		'\'' => "",
@@ -34,9 +34,9 @@ if($get_droplet->numRows() > 0) {
 	 *	Loop through ...
 	 */
 	while(false != ($droplet = $get_droplet->fetchRow( MYSQL_ASSOC ) ) ) {
-		$title	= droplep_clean_str( $droplet['name'] );
-		$desc	= droplep_clean_str( $droplet['description'] );
-		$comm	= droplep_clean_str( $droplet['comments'] );
+		$title	= droplet_clean_str( $droplet['name'] );
+		$desc	= droplet_clean_str( $droplet['description'] );
+		$comm	= droplet_clean_str( $droplet['comments'] );
         $data[] = array( 'title' => $title, 'description' => $desc, 'comment' => $comm );
     }
 }

@@ -39,27 +39,21 @@ if (defined('CAT_PATH')) {
 	}
 }
 
-$debug = false;
-if (true === $debug) {
-	ini_set('display_errors', 1);
-	error_reporting(E_ALL|E_STRICT);
-}
-
 /**
  *	Function called by parent, default by the wysiwyg-module
  *	
- *	@param	string	The name of the textarea to watch
- *	@param	mixed	The "id" - some other modules handel this param differ
- *	@param	string	Optional the width, default "100%" of given space.
- *	@param	string	Optional the height of the editor - default is '250px'
- *
- *
- */
+ * @access public
+ * @param  string  $name    - textarea name
+ * @param  string  $id      - textarea id
+ * @param  string  $content - textarea content
+ * @param  string  $width   - width - overloaded by settings
+ * @param  string  $height  - height - overloaded by settings
+ **/
 function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px') {
     global $database;
     // get settings
     $query  = "SELECT * from `".TABLE_PREFIX."mod_wysiwyg_admin_v2` where `editor`='".WYSIWYG_EDITOR."'";
-    $result = $database->query ($query );
+    $result = $database->query($query );
     $config = array();
     $css    = array();
     $plugins = NULL;
@@ -142,8 +136,8 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
-    echo $parser->get(
-        'wysiwyg.lte',
+    return $parser->get(
+        'wysiwyg',
         array(
             'name'    => $name,
             'id'      => $id,

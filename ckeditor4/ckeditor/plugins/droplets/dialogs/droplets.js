@@ -8,8 +8,8 @@
  *
  */
 
-CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
-    var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'dropleps' ) + 'dialogs/dropleps.php' );
+CKEDITOR.dialog.add( 'dropletsDialog', function ( editor ) {
+    var xml = CKEDITOR.ajax.loadXml( CKEDITOR.plugins.getPath( 'droplets' ) + 'dialogs/droplets.php' );
     var itemNodes = xml.selectNodes( 'data/element' );
     var items = new Array();    // items array
     var desc = new Array();
@@ -21,14 +21,14 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
     }
 
     return {
-        title: editor.lang.dropleps.title,
+        title: editor.lang.droplets.title,
         minWidth: 400,
         minHeight: 200,
         resizable: CKEDITOR.DIALOG_RESIZE_NONE,
         onOk: function() {
             var dialog = this;
-         	var droplep_name = dialog.getValueOf( 'tab1', 'dropleps' );
-            editor.insertText( droplep_name );
+         	var droplet_name = dialog.getValueOf( 'tab1', 'droplets' );
+            editor.insertText( droplet_name );
 			return true;
         },
         contents: [
@@ -37,31 +37,31 @@ CKEDITOR.dialog.add( 'droplepsDialog', function ( editor ) {
                 accessKey:  'C',
                 elements: [
                     {
-                        id          : 'dropleps',
+                        id          : 'droplets',
                         type        : 'select',
-                        label       : editor.lang.dropleps.label,
+                        label       : editor.lang.droplets.label,
                         labelLayout : 'horizontal',
                         items       : items,
                         onMouseUp: function() {
-							var droplep_name = this.getValue();
-							document.getElementById("droplep_info").innerHTML = desc[droplep_name];
-                            document.getElementById("droplep_comment").innerHTML = comments[droplep_name];
+							var droplet_name = this.getValue();
+							document.getElementById("droplet_info").innerHTML = desc[droplet_name];
+                            document.getElementById("droplet_comment").innerHTML = comments[droplet_name];
 						},
 						onShow: function() {
 							this.onMouseUp();
 						}
                     },
                     {
-                    	id: 'droplep_info_box',
+                    	id: 'droplet_info_box',
                     	type: 'html',
                         style: 'white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;',
-                    	html: "<div id='droplep_info'>&nbsp;</div>"
+                    	html: "<div id='droplet_info'>&nbsp;</div>"
                     },
                     {
-                    	id: 'droplep_comment_box',
+                    	id: 'droplet_comment_box',
                     	type: 'html',
                         style: 'white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;',
-                    	html: "<div id='droplep_comment'>&nbsp;</div>"
+                    	html: "<div id='droplet_comment'>&nbsp;</div>"
                     }
                 ]
             }

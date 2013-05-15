@@ -42,8 +42,8 @@ if (defined('CAT_PATH')) {
 // end include class.secure.php
 
 $LANG = array(
-    'Choose a DropLep' => 'DropLep wählen',
-    'Available DropLeps' => 'Verfügbare DropLeps',
+    'Choose a Droplet' => 'Droplet wählen',
+    'Available Droplets' => 'Verfügbare Droplets',
     'Comment' => 'Kommentar',
     'insertpre_class' => 'CSS Klasse für &lt;pre&gt; Element',
     'insertpre_style' => 'Style-Angabe(n) für &lt;pre&gt; Element',

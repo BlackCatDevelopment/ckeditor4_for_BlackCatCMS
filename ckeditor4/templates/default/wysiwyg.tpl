@@ -1,6 +1,6 @@
 <textarea name="{$name}" id="{$id}" style="width:{$width};height:{$height};">{$content}</textarea>
 <script>
-    CKEDITOR.replace( 
+    CKEDITOR.replace(
         '{$name}',
         {
             baseHref: '{$CAT_URL}'
@@ -10,7 +10,7 @@
             {foreach $config cfg}
             ,{$cfg.set_name}: {if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}{$cfg.set_value}{if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}
             {/foreach}
-            ,extraPlugins: 'xml,ajax,panelbutton,cmsplink,dropleps{if isset($plugins)},{$plugins}{/if}',
+            ,extraPlugins: 'xml,ajax,panelbutton,cmsplink,droplets{if isset($plugins)},{$plugins}{/if}',
         }
     );
 </script>
