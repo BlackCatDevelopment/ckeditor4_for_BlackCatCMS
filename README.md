@@ -4,7 +4,7 @@ CKEditor v4.x for Black Cat CMS
 This is the CKEditor v4.x WYSIWYG module for Black Cat CMS. It
 includes
 
-* CKEditor 4.0.1 (see http://ckeditor.com/);
+* CKEditor 4.1.1 (see http://ckeditor.com/);
 * a bunch of original plugins we thought to be useful;
 * some plugins created especially for use with Black Cat CMS
 
@@ -18,7 +18,7 @@ This module is distributed under the GPL.
 
 # Additional plugins
 
-* dropleps
+* droplets
 * cmsplink
 * autosave _(optional)_
 
@@ -33,12 +33,15 @@ This module is distributed under the GPL.
 * dialog
 * fakeobjects
 * flash
+* floatpanel
 * image
 * insertpre _(optional)_
 * link
 * magicline
 * oembed _(optional)_
+* panel
 * pastefromword
+* richcombo
 * scayt
 * specialchar
 * table
@@ -47,8 +50,4 @@ This module is distributed under the GPL.
 * xml
 
 Please note that some of the plugins are treated as optional, so you will have
-<<<<<<< HEAD
 to enable them first.
-=======
-to enable them first.
->>>>>>> 77284fac55e69c2d5d1dc6da3c17916296c97a91
