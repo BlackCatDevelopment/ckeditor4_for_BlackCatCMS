@@ -50,10 +50,10 @@ if (defined('CAT_PATH')) {
  * @param  string  $height  - height - overloaded by settings
  **/
 function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px') {
-    global $database;
+
     // get settings
-    $query  = "SELECT * from `".TABLE_PREFIX."mod_wysiwyg_admin_v2` where `editor`='".WYSIWYG_EDITOR."'";
-    $result = $database->query($query );
+    $query  = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
+    $result = CAT_Helper_Array::getInstance()->db()->query(sprintf($query,CAT_TABLE_PREFIX,WYSIWYG_EDITOR));
     $config = array();
     $css    = array();
     $plugins = NULL;
@@ -136,7 +136,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
-    return $parser->get(
+    $parser->output(
         'wysiwyg',
         array(
             'name'    => $name,
