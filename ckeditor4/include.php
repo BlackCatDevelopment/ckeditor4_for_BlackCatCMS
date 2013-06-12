@@ -49,7 +49,7 @@ if (defined('CAT_PATH')) {
  * @param  string  $width   - width - overloaded by settings
  * @param  string  $height  - height - overloaded by settings
  **/
-function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px') {
+function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $print = true) {
 
     // get settings
     $query  = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
@@ -136,7 +136,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
-    $parser->output(
+    $output = $parser->get(
         'wysiwyg',
         array(
             'name'    => $name,
@@ -150,5 +150,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))
         )
     );
+    if($print) echo $output;
+    return $output;
 }
 ?>
