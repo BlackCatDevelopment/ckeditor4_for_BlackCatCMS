@@ -62,7 +62,11 @@ if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/filema
 }
 if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/plugins/cmsplink/dialogs/cmsplink.php' ) )
 {
-     error_log( "Unable to register file -cmsplink.php.php-!" );
+     error_log( "Unable to register file -cmsplink.php-!" );
 }
- 
+if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/plugins/droplets/dialogs/droplets.php' ) )
+{
+     error_log( "Unable to register file -droplets.php-!" );
+}
+
 ?>
