@@ -45,10 +45,11 @@ if (defined('CAT_PATH')) {
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_maxHeight', '400');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_minHeight', '200');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_onStartup', 'true');" );
-$database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'plugins', 'autogrow,codemirror');" );
+$database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'plugins', 'autogrow,codemirror,colorbutton,div,font,stylescombo');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoParagraph', 'false');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'codemirror_theme', 'default');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'contentsCss', 'editor.css');" );
+$database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'filemanager', 'fck');");
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'height', '250px');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'skin', 'moono');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'width', '100%');" );
