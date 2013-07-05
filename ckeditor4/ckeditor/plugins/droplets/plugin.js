@@ -28,6 +28,6 @@ CKEDITOR.plugins.setLang( 'droplets', 'en', {
 });
 
 CKEDITOR.plugins.setLang( 'droplets', 'de', {
-    title : 'Droplet einfügen',
-    label : 'Verfügbare Droplets'
+    title : 'Droplet einfÃ¼gen',
+    label : 'VerfÃ¼gbare Droplets'
 });

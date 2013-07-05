@@ -29,20 +29,8 @@ if (defined('CAT_PATH')) {
 }
 // end include class.secure.php
 
-global $database;
-
-// Include the config file
-require_once('../../../../../../config.php');
-
-// get pages
-require dirname(__FILE__).'/../../../../../../framework/CAT/Pages.php';
-$pg = CAT_Pages::getInstance(-1);
-$pages = $pg->make_list();
-
-// List helper
-require dirname(__FILE__).'/../../../../../../framework/CAT/Helper/ListBuilder.php';
-$list = new CAT_Helper_ListBuilder(array('__id_key'=>'page_id'));
-$items = $list->sort( $pages, 0 );
+$items = CAT_Helper_Page::getPages();
+$items = CAT_Helper_ListBuilder::sort($items,0);
 
 header( "Cache-Control: no-cache, must-revalidate" );
 header( "Pragma: no-cache" );
@@ -50,6 +38,7 @@ header( "Content-Type: text/xml; charset:utf-8;" );
 echo '<?'.'xml version="1.0" encoding="utf-8"'.'?'.'><data>';
 echo '<pageslist>';
 foreach( $items as $i => $item ) {
-    echo '<item id="'.$item['page_id'].'" value="'.$item['menu_title'].'" />';
+    $indent = str_repeat('--', $item['level']);
+    echo '<item id="'.$item['page_id'].'" value="'.$indent.$item['menu_title'].'" />';
 }
 echo '</pageslist></data>';

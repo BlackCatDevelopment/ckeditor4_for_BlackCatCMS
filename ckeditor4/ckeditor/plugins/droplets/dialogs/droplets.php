@@ -21,24 +21,20 @@ function droplet_clean_str(&$aStr) {
 		'"' => "\\\"",
 		'\'' => "",
 		"\n" => "<br />",
-		"\r" => ""
+		"\r" => "",
 	);
-	return str_replace( array_keys($vars), array_values($vars), $aStr);
+	$string = str_replace( array_keys($vars), array_values($vars), $aStr);
+    return strip_tags($string);
 }
 
-global $database;
-$get_droplet = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_droplets` where `active`=1 ORDER BY `name`");
+$droplets = CAT_Helper_Droplet::getDroplets();
 
-if($get_droplet->numRows() > 0) {
-	/**
-	 *	Loop through ...
-	 */
-	while(false != ($droplet = $get_droplet->fetchRow( MYSQL_ASSOC ) ) ) {
-		$title	= droplet_clean_str( $droplet['name'] );
-		$desc	= droplet_clean_str( $droplet['description'] );
-		$comm	= droplet_clean_str( $droplet['comments'] );
-        $data[] = array( 'title' => $title, 'description' => $desc, 'comment' => $comm );
-    }
+foreach ( $droplets as $item )
+{
+	$title	= droplet_clean_str( $item['name'] );
+	$desc	= droplet_clean_str( $item['description'] );
+	$comm	= droplet_clean_str( $item['comments'] );
+    $data[] = array( 'title' => $title, 'description' => $desc, 'comment' => $comm );
 }
 
 header( "Cache-Control: no-cache, must-revalidate" );
