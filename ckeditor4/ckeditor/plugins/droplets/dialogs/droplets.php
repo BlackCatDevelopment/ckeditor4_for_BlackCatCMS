@@ -22,6 +22,7 @@ function droplet_clean_str(&$aStr) {
 		'\'' => "",
 		"\n" => "<br />",
 		"\r" => "",
+        '&'  => '&amp;',
 	);
 	$string = str_replace( array_keys($vars), array_values($vars), $aStr);
     return strip_tags($string);

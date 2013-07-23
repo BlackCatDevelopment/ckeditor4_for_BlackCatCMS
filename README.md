@@ -4,11 +4,9 @@ CKEditor v4.x for Black Cat CMS
 This is the CKEditor v4.x WYSIWYG module for Black Cat CMS. It
 includes
 
-* CKEditor 4.1.1 (see http://ckeditor.com/);
+* CKEditor 4.1.3 (see http://ckeditor.com/);
 * a bunch of original plugins we thought to be useful;
 * some plugins created especially for use with Black Cat CMS
-
-Please note that this is work in progress!
 
 # License
 

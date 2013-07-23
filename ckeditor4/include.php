@@ -48,6 +48,7 @@ if (defined('CAT_PATH')) {
  * @param  string  $content - textarea content
  * @param  string  $width   - width - overloaded by settings
  * @param  string  $height  - height - overloaded by settings
+ * @param  boolean $print   - direct print (default) or return string
  **/
 function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $print = true) {
 
