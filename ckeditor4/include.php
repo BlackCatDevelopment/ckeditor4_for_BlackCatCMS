@@ -58,46 +58,45 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $config = array();
     $css    = array();
     $plugins = NULL;
-    $filemanager_dirname = $filemanager_include = $filemanager_plugin = NULL;
+    $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = NULL;
     if($result->numRows())
     {
         while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
         {
-            if ( $row['set_name'] == 'contentsCss' )
+            switch( $row['set_name'] )
             {
-                if ( substr_count($row['set_value'],',') ) {
-                    $css = explode(',',$row['set_value']);
-                }
-                else {
-                    $css = array($row['set_value']);
-                }
-                continue;
-            }
-            if ( $row['set_name'] == 'plugins' )
-            {
-                $plugins = $row['set_value'];
-                continue;
-            }
-            if ( $row['set_name'] == 'filemanager' )
-            {
-                $filemanager_dirname = $row['set_value'];
-                $infofile = sanitize_path(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
-                if(file_exists($infofile))
-                {
-                    $filemanager_include = NULL;
-                    @include $infofile;
-                    if($filemanager_include)
+                case 'contentsCss':
+                    if ( substr_count($row['set_value'],',') )
+                        $css = explode(',',$row['set_value']);
+                    else
+                        $css = array($row['set_value']);
+                    break;
+                case 'plugins':
+                    $plugins = $row['set_value'];
+                    break;
+                case 'filemanager':
+                    $filemanager_dirname = $row['set_value'];
+                    $infofile = sanitize_path(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
+                    if(file_exists($infofile))
                     {
-                        $filemanager_include = str_replace('{$CAT_URL}',CAT_URL,$filemanager_include);
+                        $filemanager_include = NULL;
+                        @include $infofile;
+                        if($filemanager_include)
+                        {
+                            $filemanager_include = str_replace('{$CAT_URL}',CAT_URL,$filemanager_include);
+                        }
                     }
-                }
-                continue;
-            }
-            if ( substr_count( $row['set_value'], '#####' ) ) // array values
-            {
-                $row['set_value'] = explode( '#####', $row['set_value'] );
-            }
-            $config[] = $row;
+                    break;
+                case 'toolbar':
+                    if($row['set_value'] !== 'Full')
+                        $toolbar = $row['set_value'];
+                    break;
+                default:
+                    if ( substr_count( $row['set_value'], '#####' ) ) // array values
+                        $row['set_value'] = explode( '#####', $row['set_value'] );
+                    $config[] = $row;
+                    break;
+            }   // end switch
         }
     }
 
@@ -146,6 +145,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'height'  => $height,
             'config'  => $config,
             'plugins' => $plugins,
+            'toolbar' => $toolbar,
             'filemanager_include' => $filemanager_include,
             'css'     => implode( '\', \'', $css ),
             'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))

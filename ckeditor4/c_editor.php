@@ -70,10 +70,7 @@ final class c_editor extends c_editor_base
 
     public function getToolbars()
     {
-        return CAT_Helper_Widget::getInstance()->lang()->translate(
-            'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
-            . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
-        );
+        return array( 'Full', 'Smart', 'Simple' );
     }
 
     public function getAdditionalSettings()
