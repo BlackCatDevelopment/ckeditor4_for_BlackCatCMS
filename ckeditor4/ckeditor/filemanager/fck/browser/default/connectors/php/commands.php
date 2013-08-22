@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -20,25 +20,59 @@
  * == END LICENSE ==
  *
  * This is the File Manager Connector for PHP.
+ *
+ *
+ * Adapted for use with BlackCat CMS by Black Cat Development:
+ *
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
+ *   @license         http://www.gnu.org/licenses/gpl.html
+ *   @category        CAT_Modules
+ *   @package         ckeditor4
+ *
  */
+
+if (defined('CAT_PATH')) {
+    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+} else {
+    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
+    $inc = false;
+    foreach ($subs as $sub) {
+        if (empty($sub)) continue; $dir .= '/'.$sub;
+        if (file_exists($dir.'/framework/class.secure.php')) {
+            include($dir.'/framework/class.secure.php'); $inc = true;    break;
+        }
+    }
+    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
 
 function GetFolders( $resourceType, $currentFolder )
 {
+
 	// Map the virtual path to the local server path.
-	$sServerDir = ServerMapFolder( $resourceType, $currentFolder ) ;
+	$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFolders' ) ;
 
 	// Array that will hold the folders names.
 	$aFolders	= array() ;
 
-	$oCurrentFolder = opendir( $sServerDir ) ;
+	$oCurrentFolder = @opendir( $sServerDir ) ;
 
-	while ( $sFile = readdir( $oCurrentFolder ) )
+	if ($oCurrentFolder !== false)
 	{
-		if ( $sFile != '.' && $sFile != '..' && is_dir( $sServerDir . $sFile ) )
-			$aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
+    	while ( $sFile = readdir( $oCurrentFolder ) )
+    	{
+            // ---------------------------------------------------------------------
+            // Patch by Black Cat Development: skip dirs/files starting with a dot
+            // (not only '.' and '..' as in the original)
+            // ---------------------------------------------------------------------
+    		if ( ! preg_match( '/^\./', $sFile) && is_dir( $sServerDir . $sFile ) )
+    			$aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
+    	}
+    	closedir( $oCurrentFolder ) ;
 	}
-
-	closedir( $oCurrentFolder ) ;
 
 	// Open the "Folders" node.
 	echo "<Folders>" ;
@@ -53,33 +87,46 @@ function GetFolders( $resourceType, $currentFolder )
 
 function GetFoldersAndFiles( $resourceType, $currentFolder )
 {
+
 	// Map the virtual path to the local server path.
-	$sServerDir = ServerMapFolder( $resourceType, $currentFolder ) ;
+	$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFoldersAndFiles' ) ;
 
 	// Arrays that will hold the folders and files names.
 	$aFolders	= array() ;
 	$aFiles		= array() ;
 
-	$oCurrentFolder = opendir( $sServerDir ) ;
+	$oCurrentFolder = @opendir( $sServerDir ) ;
 
+	if ($oCurrentFolder !== false)
+	{
 	while ( $sFile = readdir( $oCurrentFolder ) )
 	{
-		if ( $sFile != '.' && $sFile != '..' )
+        // ---------------------------------------------------------------------
+        // Patch by Black Cat Development: skip dirs/files starting with a dot
+        // (not only '.' and '..' as in the original)
+        // ---------------------------------------------------------------------
+		if ( ! preg_match( '/^\./', $sFile) )
 		{
 			if ( is_dir( $sServerDir . $sFile ) )
 				$aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
 			else
 			{
-				$iFileSize = filesize( $sServerDir . $sFile ) ;
+					$iFileSize = @filesize( $sServerDir . $sFile ) ;
+					if ( !$iFileSize ) {
+						$iFileSize = 0 ;
+					}
 				if ( $iFileSize > 0 )
 				{
 					$iFileSize = round( $iFileSize / 1024 ) ;
-					if ( $iFileSize < 1 ) $iFileSize = 1 ;
+						if ( $iFileSize < 1 )
+							$iFileSize = 1 ;
 				}
 
 				$aFiles[] = '<File name="' . ConvertToXmlAttribute( $sFile ) . '" size="' . $iFileSize . '" />' ;
 			}
 		}
+	}
+		closedir( $oCurrentFolder ) ;
 	}
 
 	// Send the folders
@@ -103,19 +150,23 @@ function GetFoldersAndFiles( $resourceType, $currentFolder )
 
 function CreateFolder( $resourceType, $currentFolder )
 {
+	if (!isset($_GET)) {
+		global $_GET;
+	}
 	$sErrorNumber	= '0' ;
 	$sErrorMsg		= '' ;
 
 	if ( isset( $_GET['NewFolderName'] ) )
 	{
 		$sNewFolderName = $_GET['NewFolderName'] ;
+		$sNewFolderName = SanitizeFolderName( $sNewFolderName ) ;
 
 		if ( strpos( $sNewFolderName, '..' ) !== FALSE )
 			$sErrorNumber = '102' ;		// Invalid folder name.
 		else
 		{
 			// Map the virtual path to the local server path of the current folder.
-			$sServerDir = ServerMapFolder( $resourceType, $currentFolder ) ;
+			$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'CreateFolder' ) ;
 
 			if ( is_writable( $sServerDir ) )
 			{
@@ -145,29 +196,32 @@ function CreateFolder( $resourceType, $currentFolder )
 		$sErrorNumber = '102' ;
 
 	// Create the "Error" node.
-	echo '<Error number="' . $sErrorNumber . '" originalDescription="' . ConvertToXmlAttribute( $sErrorMsg ) . '" />' ;
+	echo '<Error number="' . $sErrorNumber . '" />' ;
 }
 
-function FileUpload( $resourceType, $currentFolder )
+// Notice the last paramter added to pass the CKEditor callback function
+function FileUpload( $resourceType, $currentFolder, $sCommand, $CKEcallback = '' )
 {
+    if (!isset($_FILES)) {
+        global $_FILES;
+    }
 	$sErrorNumber = '0' ;
 	$sFileName = '' ;
 
-	if ( isset( $_FILES['NewFile'] ) && !is_null( $_FILES['NewFile']['tmp_name'] ) )
+        //PATCH to detect a quick file upload.
+    if (( isset( $_FILES['NewFile'] ) && !is_null( $_FILES['NewFile']['tmp_name'] ) ) || (isset( $_FILES['upload'] ) && !is_null( $_FILES['upload']['tmp_name'] ) ))
 	{
 		global $Config ;
 
-		$oFile = $_FILES['NewFile'] ;
+                 //PATCH to detect a quick file upload.
+        $oFile = isset($_FILES['NewFile']) ? $_FILES['NewFile'] : $_FILES['upload'];
 
 		// Map the virtual path to the local server path.
-		$sServerDir = ServerMapFolder( $resourceType, $currentFolder ) ;
+        $sServerDir = ServerMapFolder( $resourceType, $currentFolder, $sCommand ) ;
 
 		// Get the uploaded file name.
 		$sFileName = $oFile['name'] ;
-
-		// Replace dots in the name with underscores (only one dot can be there... security issue).
-		if ( $Config['ForceSingleExtension'] )
-			$sFileName = preg_replace( '/\\.(?![^.]*$)/', '_', $sFileName ) ;
+        $sFileName = SanitizeFileName( $sFileName ) ;
 
 		$sOriginalFileName = $sFileName ;
 
@@ -175,10 +229,25 @@ function FileUpload( $resourceType, $currentFolder )
 		$sExtension = substr( $sFileName, ( strrpos($sFileName, '.') + 1 ) ) ;
 		$sExtension = strtolower( $sExtension ) ;
 
-		$arAllowed	= $Config['AllowedExtensions'][$resourceType] ;
-		$arDenied	= $Config['DeniedExtensions'][$resourceType] ;
+        if ( isset( $Config['SecureImageUploads'] ) )
+        {
+            if ( ( $isImageValid = IsImageValid( $oFile['tmp_name'], $sExtension ) ) === false )
+            {
+                $sErrorNumber = '202' ;
+            }
+        }
+ 
+        if ( isset( $Config['HtmlExtensions'] ) )
+        {
+            if ( !IsHtmlExtension( $sExtension, $Config['HtmlExtensions'] ) &&
+                ( $detectHtml = DetectHtml( $oFile['tmp_name'] ) ) === true )
+            {
+                $sErrorNumber = '202' ;
+            }
+        }
 
-		if ( ( count($arAllowed) == 0 || in_array( $sExtension, $arAllowed ) ) && ( count($arDenied) == 0 || !in_array( $sExtension, $arDenied ) ) )
+        // Check if it is an allowed extension.
+        if ( !$sErrorNumber && IsAllowedExt( $sExtension, $resourceType ) )
 		{
 			$iCounter = 0 ;
 
@@ -198,14 +267,41 @@ function FileUpload( $resourceType, $currentFolder )
 
 					if ( is_file( $sFilePath ) )
 					{
+                        if ( isset( $Config['ChmodOnUpload'] ) && !$Config['ChmodOnUpload'] )
+                        {
+                            break ;
+                        }
+ 
+                        $permissions = 0777;
+ 
+                        if ( isset( $Config['ChmodOnUpload'] ) && $Config['ChmodOnUpload'] )
+                        {
+                            $permissions = $Config['ChmodOnUpload'] ;
+                        }
+ 
 						$oldumask = umask(0) ;
-						chmod( $sFilePath, 0777 ) ;
+                        chmod( $sFilePath, $permissions ) ;
 						umask( $oldumask ) ;
 					}
 
 					break ;
 				}
 			}
+ 
+            if ( file_exists( $sFilePath ) )
+            {
+                //previous checks failed, try once again
+                if ( isset( $isImageValid ) && $isImageValid === -1 && IsImageValid( $sFilePath, $sExtension ) === false )
+                {
+                    @unlink( $sFilePath ) ;
+                    $sErrorNumber = '202' ;
+                }
+                else if ( isset( $detectHtml ) && $detectHtml === -1 && DetectHtml( $sFilePath ) === true )
+                {
+                    @unlink( $sFilePath ) ;
+                    $sErrorNumber = '202' ;
+                }
+            }
 		}
 		else
 			$sErrorNumber = '202' ;
@@ -213,10 +309,18 @@ function FileUpload( $resourceType, $currentFolder )
 	else
 		$sErrorNumber = '202' ;
 
-	echo '<script type="text/javascript">' ;
-	echo 'window.parent.frames["frmUpload"].OnUploadCompleted(' . $sErrorNumber . ',"' . str_replace( '"', '\\"', $sFileName ) . '") ;' ;
-	echo '</script>' ;
+    $sFileUrl = CombinePaths( GetResourceTypePath( $resourceType, $sCommand ) , $currentFolder ) ;
+    $sFileUrl = CombinePaths( $sFileUrl, $sFileName ) ;
 
+    if($CKEcallback == '')
+    {
+        SendUploadResults( $sErrorNumber, $sFileUrl, $sFileName ) ;
+    }
+    else
+    {
+        //issue the CKEditor Callback
+        SendCKEditorResults ($sErrorNumber, $CKEcallback, $sFileUrl, $sFileName);
+    }
 	exit ;
 }
 ?>

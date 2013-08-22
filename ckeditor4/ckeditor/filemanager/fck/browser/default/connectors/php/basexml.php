@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -21,7 +21,34 @@
  *
  * These functions define the base of the XML response sent by the PHP
  * connector.
+ *
+ *
+ * Adapted for use with BlackCat CMS by Black Cat Development:
+ *
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
+ *   @license         http://www.gnu.org/licenses/gpl.html
+ *   @category        CAT_Modules
+ *   @package         ckeditor4
+ *
  */
+
+if (defined('CAT_PATH')) {
+    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+} else {
+    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
+    $inc = false;
+    foreach ($subs as $sub) {
+        if (empty($sub)) continue; $dir .= '/'.$sub;
+        if (file_exists($dir.'/framework/class.secure.php')) {
+            include($dir.'/framework/class.secure.php'); $inc = true;    break;
+        }
+    }
+    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
 
 function SetXmlHeaders()
 {
@@ -53,7 +80,7 @@ function CreateXmlHeader( $command, $resourceType, $currentFolder )
 	echo '<Connector command="' . $command . '" resourceType="' . $resourceType . '">' ;
 
 	// Add the current folder node.
-	echo '<CurrentFolder path="' . ConvertToXmlAttribute( $currentFolder ) . '" url="' . ConvertToXmlAttribute( GetUrlFromPath( $resourceType, $currentFolder ) ) . '" />' ;
+	echo '<CurrentFolder path="' . ConvertToXmlAttribute( $currentFolder ) . '" url="' . ConvertToXmlAttribute( GetUrlFromPath( $resourceType, $currentFolder, $command ) ) . '" />' ;
 
 	$GLOBALS['HeaderSent'] = true ;
 }
@@ -65,6 +92,15 @@ function CreateXmlFooter()
 
 function SendError( $number, $text )
 {
+	if ( $_GET['Command'] == 'FileUpload' )
+		SendUploadResults( $number, "", "", $text ) ;
+	if ( isset( $GLOBALS['HeaderSent'] ) && $GLOBALS['HeaderSent'] )
+	{
+		SendErrorNode( $number, $text ) ;
+		CreateXmlFooter() ;
+	}
+	else
+	{
 	SetXmlHeaders() ;
 
 	// Create the XML document header
@@ -75,12 +111,15 @@ function SendError( $number, $text )
 	SendErrorNode(  $number, $text ) ;
 	
 	echo '</Connector>' ;
-
+	}
 	exit ;
 }
 
 function SendErrorNode(  $number, $text )
 {
+	if ($text)
 	echo '<Error number="' . $number . '" text="' . htmlspecialchars( $text ) . '" />' ;
+	else
+		echo '<Error number="' . $number . '" />' ;
 }
 ?>

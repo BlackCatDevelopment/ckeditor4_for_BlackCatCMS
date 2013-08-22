@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -20,73 +20,75 @@
  * == END LICENSE ==
  *
  * This is the File Manager Connector for PHP.
+ *
+ *
+ * Adapted for use with BlackCat CMS by Black Cat Development:
+ *
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
+ *   @license         http://www.gnu.org/licenses/gpl.html
+ *   @category        CAT_Modules
+ *   @package         ckeditor4
+ *
  */
+
+if (defined('CAT_PATH')) {
+    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+} else {
+    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
+    $inc = false;
+    foreach ($subs as $sub) {
+        if (empty($sub)) continue; $dir .= '/'.$sub;
+        if (file_exists($dir.'/framework/class.secure.php')) {
+            include($dir.'/framework/class.secure.php'); $inc = true;    break;
+        }
+    }
+    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
 
 ob_start() ;
 
-include('config.php') ;
-include('util.php') ;
-include('io.php') ;
-include('basexml.php') ;
-include('commands.php') ;
+require('./config.php') ;
+require('./util.php') ;
+require('./io.php') ;
+require('./basexml.php') ;
+require('./commands.php') ;
+require('./phpcompat.php') ;
 
 if ( !$Config['Enabled'] )
-	SendError( 1, 'This connector is disabled. Please check the "/filemanager/fck/browser/default/connectors/php/config.php" file' ) ;
-
-// Get the "UserFiles" path.
-$GLOBALS["UserFilesPath"] = '' ;
-
-if ( isset( $Config['UserFilesPath'] ) )
-	$GLOBALS["UserFilesPath"] = $Config['UserFilesPath'] ;
-else if ( isset( $_GET['ServerPath'] ) )
-	$GLOBALS["UserFilesPath"] = $_GET['ServerPath'] ;
-else
-	$GLOBALS["UserFilesPath"] = '/userfiles/' ;
-
-if ( ! ereg( '/$', $GLOBALS["UserFilesPath"] ) )
-	$GLOBALS["UserFilesPath"] .= '/' ;
-
-if ( strlen( $Config['UserFilesAbsolutePath'] ) > 0 )
-{
-	$GLOBALS["UserFilesDirectory"] = $Config['UserFilesAbsolutePath'] ;
-
-	if ( ! ereg( '/$', $GLOBALS["UserFilesDirectory"] ) )
-		$GLOBALS["UserFilesDirectory"] .= '/' ;
-}
-else
-{
-	// Map the "UserFiles" path to a local directory.
-	$GLOBALS["UserFilesDirectory"] = GetRootPath() . $GLOBALS["UserFilesPath"] ;
-}
+	SendError( 1, 'This connector is disabled. Please check the "editor/filemanager/connectors/php/config.php" file' ) ;
 
 DoResponse() ;
 
 function DoResponse()
 {
+
+    if (!isset($_GET)) {
+        global $_GET;
+    }
 	if ( !isset( $_GET['Command'] ) || !isset( $_GET['Type'] ) || !isset( $_GET['CurrentFolder'] ) )
-		return ;
+		return;
 
 	// Get the main request informaiton.
 	$sCommand		= $_GET['Command'] ;
 	$sResourceType	= $_GET['Type'] ;
-	$sCurrentFolder	= $_GET['CurrentFolder'] ;
+	$sCurrentFolder	= GetCurrentFolder() ;
+
+	// Check if it is an allowed command
+	if ( ! IsAllowedCommand( $sCommand ) )
+		SendError( 1, 'The "' . $sCommand . '" command isn\'t allowed' ) ;
 
 	// Check if it is an allowed type.
-	if ( !in_array( $sResourceType, array('File','Image','Flash','Media') ) )
-		return ;
-
-	// Check the current folder syntax (must begin and start with a slash).
-	if ( ! ereg( '/$', $sCurrentFolder ) ) $sCurrentFolder .= '/' ;
-	if ( strpos( $sCurrentFolder, '/' ) !== 0 ) $sCurrentFolder = '/' . $sCurrentFolder ;
-
-	// Check for invalid folder paths (..)
-	if ( strpos( $sCurrentFolder, '..' ) )
-		SendError( 102, "" ) ;
+	if ( !IsAllowedType( $sResourceType ) )
+		SendError( 1, 'Invalid type specified' ) ;
 
 	// File Upload doesn't have to Return XML, so it must be intercepted before anything.
 	if ( $sCommand == 'FileUpload' )
 	{
-		FileUpload( $sResourceType, $sCurrentFolder ) ;
+		FileUpload( $sResourceType, $sCurrentFolder, $sCommand ) ;
 		return ;
 	}
 

@@ -20,89 +20,117 @@
  * == END LICENSE ==
  *
  * Configuration file for the File Manager Connector for PHP.
+ *
+ *
+ * Adapted for use with BlackCat CMS by Black Cat Development:
+ *
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
+ *   @license         http://www.gnu.org/licenses/gpl.html
+ *   @category        CAT_Modules
+ *   @package         ckeditor4
+ *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
 if (defined('CAT_PATH')) {
-	include(CAT_PATH.'/framework/class.secure.php');
+    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
 } else {
-	$root = "../";
-	$level = 1;
-	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-		$root .= "../";
-		$level += 1;
-	}
-	if (file_exists($root.'/framework/class.secure.php')) {
-		include($root.'/framework/class.secure.php');
-	} else {
-		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-	}
+    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
+    $inc = false;
+    foreach ($subs as $sub) {
+        if (empty($sub)) continue; $dir .= '/'.$sub;
+        if (file_exists($dir.'/framework/class.secure.php')) {
+            include($dir.'/framework/class.secure.php'); $inc = true;    break;
+        }
+    }
+    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 }
-// end include class.secure.php
 
 if(!defined('CAT_PATH'))
     require dirname(__FILE__).'/../../../../../../../../config.php';
-require_once(CAT_PATH .'/framework/class.admin.php');
+
+$backend = CAT_Backend::getInstance('media','media',false,false);
+$user    = CAT_Users::getInstance();
+$dir     = CAT_Helper_Directory::getInstance();
 
 global $Config ;
 
 // SECURITY: You must explicitelly enable this "connector". (Set it to "true").
 $Config['Enabled'] = false ;
 
-
 /**
-*	SECURITY PATCH FOR WEBSITEBAKER (doc)
-*	only enable PHP connector if user is authenticated to WB
-*	and has at least permissions to view the WB MEDIA folder
-*   Adapted for use with BlackCat CMS
+*	SECURITY PATCH
+*   Only enable this connector if the user is authenticated (=logged in) and
+*   has the appropriate permissions
 */
-$base_path = str_replace('\\','/', CAT_PATH);
-$base_path = str_replace('//','/', CAT_PATH);
 
-// check if user is authenticated and has permission to view MEDIA folder
-$admin = new admin('Media', 'media_view', false, false);
-if(($admin->get_permission('media_view') === true))
+$base_path = CAT_PATH;
+
+if(($user->get_permission('media_view') === true))
 {
 	// user allowed to view MEDIA folder -> enable PHP connector
 	$Config['Enabled'] = true ;
-	// allow actions to list folders and files
+	// add view actions to allowed commands
 	$Config['ConfigAllowedCommands'] = array('GetFolders', 'GetFoldersAndFiles') ;
 }
-
-// Path to user files relative to the document root.
-// $Config['UserFilesPath'] = '/userfiles/' ;
-$Config['UserFilesPath'] = CAT_URL.MEDIA_DIRECTORY.'/' ;
-// use home folder of current user as document root if available
-if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
-   $Config['UserFilesPath'] = $Config['UserFilesPath'].$_SESSION['HOME_FOLDER'];
+// check if user is allowed to upload files to the media directory
+if(($user->get_permission('media_upload') === true)) {
+	// add actions to upload files to the MEDIA folder
+	array_push($Config['ConfigAllowedCommands'], 'FileUpload', 'QuickUpload');
+}
+// check if user is allowed to create new folders in the media directory
+if(($user->get_permission('media_create') === true)) {
+	// add action to create new folders in the MEDIA folder
+	array_push($Config['ConfigAllowedCommands'], 'CreateFolder');
 }
 
-// Fill the following value it you prefer to specify the absolute path for the
-// user files directory. Useful if you are using a virtual directory, symbolic
-// link or alias. Examples: 'C:\\MySite\\userfiles\\' or '/root/mysite/userfiles/'.
-// Attention: The above 'UserFilesPath' must point to the same directory.
-// $Config['UserFilesAbsolutePath'] = '' ;
+$Config['UserFilesPath']         = CAT_URL.MEDIA_DIRECTORY.'/';
+$Config['UserFilesAbsolutePath'] = $dir->sanitizePath($base_path.MEDIA_DIRECTORY).'/';
 
-$Config['UserFilesAbsolutePath'] = $base_path .MEDIA_DIRECTORY.'/' ;
 // use home folder of current user as document root if available
-if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path .MEDIA_DIRECTORY .$_SESSION['HOME_FOLDER'])){
-   $Config['UserFilesAbsolutePath'] = $Config['UserFilesAbsolutePath'].$_SESSION['HOME_FOLDER'].'/';
+if(isset($_SESSION['HOME_FOLDER']) && file_exists($base_path.MEDIA_DIRECTORY.$_SESSION['HOME_FOLDER']))
+{
+   $Config['UserFilesPath']         = $Config['UserFilesPath'].$_SESSION['HOME_FOLDER'].'/';
+   $Config['UserFilesAbsolutePath'] = $dir->sanitizePath($Config['UserFilesAbsolutePath'].$_SESSION['HOME_FOLDER']).'/';
 }
 
-// Due to security issues with Apache modules, it is reccomended to leave the
-// following setting enabled.
-$Config['ForceSingleExtension'] = true ;
-
-$Config['AllowedExtensions']['File']	= array() ;
-$Config['DeniedExtensions']['File']		= array('html','htm','php','php2','php3','php4','php5','phtml','pwml','inc','asp','aspx','ascx','jsp','cfm','cfc','pl','bat','exe','com','dll','vbs','js','reg','cgi','htaccess','asis','sh','shtml','shtm','phtm') ;
-
-$Config['AllowedExtensions']['Image']	= array('jpg','gif','jpeg','png') ;
-$Config['DeniedExtensions']['Image']	= array() ;
-
-$Config['AllowedExtensions']['Flash']	= array('swf','fla') ;
-$Config['DeniedExtensions']['Flash']	= array() ;
-
-$Config['AllowedExtensions']['Media']	= array('swf','fla','jpg','gif','jpeg','png','avi','mpg','mpeg') ;
+$Config['ForceSingleExtension']         = true;
+$Config['SecureImageUploads']           = true;
+$Config['ConfigAllowedTypes']           = array('File', 'Image', 'Flash', 'Media');
+$Config['AllowedExtensions']['File']	= array('pdf','zip','gzip','gz');
+$Config['DeniedExtensions']['File']		= array();
+$Config['AllowedExtensions']['Image']	= array('jpg','gif','jpeg','png','tif');
+$Config['DeniedExtensions']['Image']	= array();
+$Config['AllowedExtensions']['Flash']	= array('swf','fla');
+$Config['DeniedExtensions']['Flash']	= array();
+$Config['AllowedExtensions']['Media']
+    = array_merge(
+        $Config['AllowedExtensions']['Image'],
+        $Config['AllowedExtensions']['Flash'],
+        array('avi','mpg','mpeg')
+    );
 $Config['DeniedExtensions']['Media']	= array() ;
+$Config['HtmlExtensions']               = array("html", "htm", "xml", "xsd", "txt", "js");
+
+// set all paths to the same value
+$Config['FileTypesPath']['File']			= $Config['UserFilesPath'];
+$Config['FileTypesAbsolutePath']['File']	= $Config['UserFilesAbsolutePath'];
+$Config['QuickUploadPath']['File']			= $Config['UserFilesPath'];
+$Config['QuickUploadAbsolutePath']['File']	= $Config['UserFilesAbsolutePath'];
+$Config['FileTypesPath']['Image'] 			= $Config['UserFilesPath'];
+$Config['FileTypesAbsolutePath']['Image'] 	= $Config['UserFilesAbsolutePath'];
+$Config['QuickUploadPath']['Image'] 		= $Config['UserFilesPath'];
+$Config['QuickUploadAbsolutePath']['Image']	= $Config['UserFilesAbsolutePath'];
+$Config['FileTypesPath']['Flash']			= $Config['UserFilesPath'];
+$Config['FileTypesAbsolutePath']['Flash'] 	= $Config['UserFilesAbsolutePath'];
+$Config['QuickUploadPath']['Flash']			= $Config['UserFilesPath'];
+$Config['QuickUploadAbsolutePath']['Flash']	= $Config['UserFilesAbsolutePath'];
+$Config['FileTypesPath']['Media']			= $Config['UserFilesPath'] . '' ;
+$Config['FileTypesAbsolutePath']['Media']	= $Config['UserFilesAbsolutePath'];
+$Config['QuickUploadPath']['Media']			= $Config['UserFilesPath'];
+$Config['QuickUploadAbsolutePath']['Media']	= $Config['UserFilesAbsolutePath'];
 
 ?>

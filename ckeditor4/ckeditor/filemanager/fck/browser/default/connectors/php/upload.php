@@ -1,7 +1,7 @@
 <?php
 /*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -20,111 +20,69 @@
  * == END LICENSE ==
  *
  * This is the "File Uploader" for PHP.
+ *
+ *
+ * Adapted for use with BlackCat CMS by Black Cat Development:
+ *
+ *   @author          Black Cat Development
+ *   @copyright       2013, Black Cat Development
+ *   @link            http://blackcat-cms.org
+ *   @license         http://www.gnu.org/licenses/gpl.html
+ *   @category        CAT_Modules
+ *   @package         ckeditor4
+ *
  */
 
-require('config.php') ;
-require('util.php') ;
+if (defined('CAT_PATH')) {
+    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
+} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
+    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+} else {
+    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
+    $inc = false;
+    foreach ($subs as $sub) {
+        if (empty($sub)) continue; $dir .= '/'.$sub;
+        if (file_exists($dir.'/framework/class.secure.php')) {
+            include($dir.'/framework/class.secure.php'); $inc = true;    break;
+        }
+    }
+    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+}
 
-// This is the function that sends the results of the uploading process.
-function SendResults( $errorNumber, $fileUrl = '', $fileName = '', $customMsg = '' )
+require('./config.php') ;
+require('./util.php') ;
+require('./io.php') ;
+require('./commands.php') ;
+require('./phpcompat.php') ;
+
+function SendError( $number, $text )
 {
-	echo '<script type="text/javascript">' ;
-	echo 'window.parent.OnUploadCompleted(' . $errorNumber . ',"' . str_replace( '"', '\\"', $fileUrl ) . '","' . str_replace( '"', '\\"', $fileName ) . '", "' . str_replace( '"', '\\"', $customMsg ) . '") ;' ;
-	echo '</script>' ;
-	exit ;
+	SendUploadResults( $number, '', '', $text ) ;
 }
 
 // Check if this uploader has been enabled.
 if ( !$Config['Enabled'] )
-	SendResults( '1', '', '', 'This file uploader is disabled. Please check the "editor/filemanager/upload/php/config.php" file' ) ;
+	SendUploadResults( '1', '', '', 'This file uploader is disabled. Please check the "editor/filemanager/connectors/php/config.php" file' ) ;
 
-// Check if the file has been correctly uploaded.
-if ( !isset( $_FILES['NewFile'] ) || is_null( $_FILES['NewFile']['tmp_name'] ) || $_FILES['NewFile']['name'] == '' )
-	SendResults( '202' ) ;
+$sCommand = 'QuickUpload' ;
 
-// Get the posted file.
-$oFile = $_FILES['NewFile'] ;
-
-// Get the uploaded file name extension.
-$sFileName = $oFile['name'] ;
-
-// Replace dots in the name with underscores (only one dot can be there... security issue).
-if ( $Config['ForceSingleExtension'] )
-	$sFileName = preg_replace( '/\\.(?![^.]*$)/', '_', $sFileName ) ;
-
-$sOriginalFileName = $sFileName ;
-
-// Get the extension.
-$sExtension = substr( $sFileName, ( strrpos($sFileName, '.') + 1 ) ) ;
-$sExtension = strtolower( $sExtension ) ;
-
-// The the file type (from the QueryString, by default 'File').
+// The file type (from the QueryString, by default 'File').
 $sType = isset( $_GET['Type'] ) ? $_GET['Type'] : 'File' ;
 
+$sCurrentFolder	= "/" ;
+
+// Is enabled the upload?
+if ( ! IsAllowedCommand( $sCommand ) )
+	SendUploadResults( '1', '', '', 'The ""' . $sCommand . '"" command isn\'t allowed' ) ;
+
 // Check if it is an allowed type.
-if ( !in_array( $sType, array('File','Image','Flash','Media') ) )
-    SendResults( 1, '', '', 'Invalid type specified' ) ;
+if ( !IsAllowedType( $sType ) )
+    SendUploadResults( 1, '', '', 'Invalid type specified' ) ;
 
-// Get the allowed and denied extensions arrays.
-$arAllowed	= $Config['AllowedExtensions'][$sType] ;
-$arDenied	= $Config['DeniedExtensions'][$sType] ;
+// Get the CKEditor Callback
+$CKEcallback = $_GET['CKEditorFuncNum'];
 
-// Check if it is an allowed extension.
-if ( ( count($arAllowed) > 0 && !in_array( $sExtension, $arAllowed ) ) || ( count($arDenied) > 0 && in_array( $sExtension, $arDenied ) ) )
-	SendResults( '202' ) ;
+//pass it on to file upload function
+FileUpload( $sType, $sCurrentFolder, $sCommand, $CKEcallback );
 
-$sErrorNumber	= '0' ;
-$sFileUrl		= '' ;
-
-// Initializes the counter used to rename the file, if another one with the same name already exists.
-$iCounter = 0 ;
-
-// Get the target directory.
-if ( isset( $Config['UserFilesAbsolutePath'] ) && strlen( $Config['UserFilesAbsolutePath'] ) > 0 )
-	$sServerDir = $Config['UserFilesAbsolutePath'] ;
-else
-	$sServerDir = GetRootPath() . $Config["UserFilesPath"] ;
-
-if ( $Config['UseFileType'] )
-	$sServerDir .= strtolower($sType) . '/' ;
-
-//check for the directory before uploading the file
-if(!is_dir($sServerDir))
-{
-    mkdir($sServerDir);
-} 
-
-while ( true )
-{
-	// Compose the file path.
-	$sFilePath = $sServerDir . $sFileName ;
-
-	// If a file with that name already exists.
-	if ( is_file( $sFilePath ) )
-	{
-		$iCounter++ ;
-		$sFileName = RemoveExtension( $sOriginalFileName ) . '(' . $iCounter . ').' . $sExtension ;
-		$sErrorNumber = '201' ;
-	}
-	else
-	{
-		move_uploaded_file( $oFile['tmp_name'], $sFilePath ) ;
-
-		if ( is_file( $sFilePath ) )
-		{
-			$oldumask = umask(0) ;
-			chmod( $sFilePath, 0777 ) ;
-			umask( $oldumask ) ;
-		}
-
-		if ( $Config['UseFileType'] )
-			$sFileUrl = $Config["UserFilesPath"] . strtolower($sType) . '/' . $sFileName ;
-		else
-			$sFileUrl = $Config["UserFilesPath"] . $sFileName ;
-
-		break ;
-	}
-}
-
-SendResults( $sErrorNumber, $sFileUrl, $sFileName ) ;
 ?>
