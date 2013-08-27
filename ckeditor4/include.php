@@ -105,25 +105,15 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
         foreach( $css as $i => $file )
         {
             if( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/'.$file)) )
-            {
                 $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/'.$file);
-            }
             elseif( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file)) )
-            {
                 $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file);
-            }
             elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/custom/'.$file)) )
-            {
                 $css[$i] = sanitize_url(CAT_URL.'/modules/ckeditor4/config/custom/'.$file );
-            }
             elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/default/'.$file)) )
-            {
                 $css[$i] = sanitize_url(CAT_URL.'/modules/ckeditor4/config/default/'.$file );
-            }
             else
-            {
                 unset($css[$i]);
-            }
         }
     }
 
@@ -146,9 +136,9 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
             'config'  => $config,
             'plugins' => $plugins,
             'toolbar' => $toolbar,
-            'filemanager_include' => $filemanager_include,
             'css'     => implode( '\', \'', $css ),
-            'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content))
+            'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content)),
+            'filemanager_include' => $filemanager_include,
         )
     );
     if($print) echo $output;
