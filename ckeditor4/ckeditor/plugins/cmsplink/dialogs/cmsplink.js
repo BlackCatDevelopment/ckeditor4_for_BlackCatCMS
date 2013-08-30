@@ -88,6 +88,9 @@ CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
             var use_title = ( dialog.getValueOf( 'tab1', 'pagelinkusepagename' ) == 1 ? true : false );
             if ( selection === null ) {
                 var html  = ( use_title ? pages[page_id] : editor.getSelection().getSelectedText() );
+                if ( html.length == 0 ) {
+                    html = pages[page_id];
+                }
                 selection = CKEDITOR.dom.element.createFromHtml( html );
             }
             var css_class = dialog.getValueOf( 'tab1', 'pagelinkclass' );

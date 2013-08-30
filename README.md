@@ -19,6 +19,7 @@ This module is distributed under the GPL.
 * droplets
 * cmsplink
 * autosave _(optional)_
+* justify _(optional)_
 
 # Original plugins list
 
