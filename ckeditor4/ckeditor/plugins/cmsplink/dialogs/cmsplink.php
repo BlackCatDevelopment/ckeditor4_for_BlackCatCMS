@@ -29,7 +29,7 @@ if (defined('CAT_PATH')) {
 }
 // end include class.secure.php
 
-$items = CAT_Helper_Page::getPages();
+$items = CAT_Helper_Page::getPages(1);
 $items = CAT_Helper_ListBuilder::sort($items,0);
 
 header( "Cache-Control: no-cache, must-revalidate" );
