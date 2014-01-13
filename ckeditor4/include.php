@@ -108,6 +108,10 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
                 $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/'.$file);
             elseif( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file)) )
                 $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file);
+            elseif( defined('DEFAULT_TEMPLATE_VARIANT') && file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.DEFAULT_TEMPLATE_VARIANT.'/'.$file)) )
+                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.DEFAULT_TEMPLATE_VARIANT.'/'.$file);
+            elseif( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/default/'.$file)) )
+                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/default/'.$file);
             elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/custom/'.$file)) )
                 $css[$i] = sanitize_url(CAT_URL.'/modules/ckeditor4/config/custom/'.$file );
             elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/default/'.$file)) )

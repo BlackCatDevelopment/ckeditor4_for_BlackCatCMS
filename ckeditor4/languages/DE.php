@@ -23,7 +23,6 @@
  *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
 if (defined('CAT_PATH')) {
 	include(CAT_PATH.'/framework/class.secure.php');
 } else {
@@ -39,7 +38,8 @@ if (defined('CAT_PATH')) {
 		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 	}
 }
-// end include class.secure.php
+
+$module_description = 'CKEditor 4.1.3; CKE ist ein WYSIWYG Editor und kann sowohl im Backend als auch im Frontend verwendet werden';
 
 $LANG = array(
     'Choose a Droplet' => 'Droplet wählen',

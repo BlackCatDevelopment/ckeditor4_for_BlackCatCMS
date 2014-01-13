@@ -42,12 +42,12 @@ if (defined('CAT_PATH')) {
 $module_directory	= 'ckeditor4';
 $module_name		= 'CKEditor v4.x';
 $module_function	= 'WYSIWYG';
-$module_version		= '0.9';
+$module_version		= '0.10';
 $module_platform	= '1.x';
 $module_author		= 'Black Cat Development';
 $module_license		= '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
 $module_license_terms = '-';
-$module_description = 'includes CKEditor 4.0.1; CKE allows editing content and can be integrated in frontend and backend modules.';
+$module_description = 'includes CKEditor 4.1.3; CKE allows editing content and can be integrated in frontend and backend modules.';
 $module_guid 		= '002870FF-37A7-4D47-9712-318D1B4E450A';
 $module_home		= 'http://blackcat-cms.org';
 
