@@ -23,6 +23,7 @@
  *
  */
 
+
 if (defined('CAT_PATH')) {
 	include(CAT_PATH.'/framework/class.secure.php');
 } else {
