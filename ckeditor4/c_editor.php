@@ -76,6 +76,7 @@ final class c_editor extends c_editor_base
     public function getAdditionalSettings()
     {
         return array(
+            array( 'name' => 'allowedContent'    , 'type' => 'boolean', 'default' => 'false'      ),
             array( 'name' => 'autoParagraph'     , 'type' => 'boolean', 'default' => 'false'      ),
             array( 'name' => 'contentsCss'       , 'type' => 'text'   , 'default' => 'editor.css' ),
             array( 'name' => 'insertpre_class'   , 'type' => 'text'   , 'default' => ''           ),

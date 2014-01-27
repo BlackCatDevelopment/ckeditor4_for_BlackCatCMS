@@ -47,6 +47,7 @@ $LANG = array(
     'Comment' => 'Kommentar',
     'insertpre_class' => 'CSS Klasse für &lt;pre&gt; Element',
     'insertpre_style' => 'Style-Angabe(n) für &lt;pre&gt; Element',
+    'allowedContent' => 'Advanced Content Filter (ACF) deaktivieren (Details hierzu siehe <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter</a>)',
     'autoParagraph' => 'Bestimmt, ob Inline-Inhalte innerhalb des Body in Blöcke eingefaßt werden.',
     'autoGrow_minHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Minimale Höhe des Eingabebereichs bei Verwendung von autoGrow',
     'autoGrow_maxHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Maximale Höhe des Eingabebereichs bei Verwendung von autoGrow',

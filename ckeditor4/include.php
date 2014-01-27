@@ -65,6 +65,10 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
         {
             switch( $row['set_name'] )
             {
+                case 'allowedContent':
+                    if($row['set_value'] == 'true')
+                        $config[] = $row;
+                    break;
                 case 'contentsCss':
                     if ( substr_count($row['set_value'],',') )
                         $css = explode(',',$row['set_value']);
