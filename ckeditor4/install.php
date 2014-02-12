@@ -45,7 +45,7 @@ if (defined('CAT_PATH')) {
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_maxHeight', '400');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_minHeight', '200');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoGrow_onStartup', 'true');" );
-$database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'plugins', 'autogrow,codemirror,colorbutton,div,font,stylescombo');" );
+$database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'plugins', 'autogrow,codemirror,colorbutton,div,font,justify,stylescombo');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'autoParagraph', 'false');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'codemirror_theme', 'default');" );
 $database->query("REPLACE INTO `".CAT_TABLE_PREFIX."mod_wysiwyg_admin_v2` (`editor`, `set_name`, `set_value`) VALUES ('ckeditor4', 'contentsCss', 'editor.css');" );
@@ -69,4 +69,12 @@ if ( false === $addons_helper->sec_register_file( 'ckeditor4', '/ckeditor/plugin
      error_log( "Unable to register file -droplets.php-!" );
 }
 
+// check if another WYSIWYG editor is active; if not, activate CKE
+if(!CAT_Registry::defined('WYSIWYG_EDITOR') || WYSIWYG_EDITOR == '')
+{
+    $database->query(sprintf(
+        "UPDATE `%ssettings` SET `value`='%s' WHERE `name`='%s'",
+        CAT_TABLE_PREFIX, 'ckeditor4', 'wysiwyg_editor'
+    ));
+}
 ?>
