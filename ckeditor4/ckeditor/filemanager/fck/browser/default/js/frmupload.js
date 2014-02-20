@@ -31,11 +31,11 @@ function OnUploadCompleted( errorNumber, data )
 	if ( document.all )
 		document.getElementById('NewFile').outerHTML = '<input id="NewFile" name="NewFile" style="WIDTH: 100%" type="file">' ;
 	else
-		document.getElementById('frmUpload').reset() ;
+		window.parent.frames['frmUpload'].document.getElementById('frmUpload').reset() ;
 
 	// Reset the interface elements.
-	document.getElementById('eUploadMessage').innerHTML = 'Upload a new file in this folder' ;
-	document.getElementById('btnUpload').disabled = false ;
+	window.parent.frames['frmUpload'].document.getElementById('eUploadMessage').innerHTML = 'Upload a new file in this folder' ;
+	window.parent.frames['frmUpload'].document.getElementById('btnUpload').disabled = false ;
 
 	switch ( errorNumber )
 	{
