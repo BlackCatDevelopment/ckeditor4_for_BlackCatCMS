@@ -11,7 +11,9 @@
             {foreach $config cfg}
             ,{$cfg.set_name}: {if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}{$cfg.set_value}{if $cfg.set_value != 'true' && $cfg.set_value != 'false' }'{/if}
             {/foreach}
-            ,extraPlugins: 'xml,ajax,panelbutton,cmsplink,droplets{if isset($plugins)},{$plugins}{/if}'
+            ,extraPlugins: 'xml,ajax,panelbutton,cmsplink,droplets{if isset($plugins)},{$plugins}{/if}',
+            width: "{$width}",
+			height: "{$height}"
         }
     );
 </script>
