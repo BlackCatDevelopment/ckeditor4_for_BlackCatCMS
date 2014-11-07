@@ -90,7 +90,14 @@ if(($user->get_permission('media_create') === true)) {
 	array_push($Config['ConfigAllowedCommands'], 'CreateFolder');
 }
 
-$Config['UserFilesPath']         = CAT_URL.MEDIA_DIRECTORY.'/';
+$val = CAT_Helper_Validate::getInstance();
+if(method_exists($val,'getURI')) {
+    $url = $val->getURI(CAT_URL); // for scheme relative URLs in BC >= v1.1
+} else {
+    $url = CAT_URL;
+}
+
+$Config['UserFilesPath']         = $url.MEDIA_DIRECTORY.'/';
 $Config['UserFilesAbsolutePath'] = $dir->sanitizePath($base_path.MEDIA_DIRECTORY).'/';
 
 // use home folder of current user as document root if available
