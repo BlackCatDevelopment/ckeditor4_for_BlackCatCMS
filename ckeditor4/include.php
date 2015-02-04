@@ -53,10 +53,10 @@ if (defined('CAT_PATH')) {
 function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $print = true) {
 
     // get settings
-    $query  = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
-    $result = CAT_Helper_Array::getInstance()->db()->query(sprintf($query,CAT_TABLE_PREFIX,WYSIWYG_EDITOR));
-    $config = array();
-    $css    = array();
+    $query   = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
+    $result  = CAT_Helper_Array::getInstance()->db()->query(sprintf($query,CAT_TABLE_PREFIX,WYSIWYG_EDITOR));
+    $config  = array();
+    $css     = array();
     $plugins = NULL;
     $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = NULL;
     if($result->numRows())
@@ -106,23 +106,43 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     if(count($css))
     {
+
+        global $page_id;
+        $variant  = CAT_Helper_Page::getPageSettings($page_id,'internal','template_variant');
+        if(!$variant)
+            $variant = ( defined('DEFAULT_TEMPLATE_VARIANT') && DEFAULT_TEMPLATE_VARIANT != '' )
+                     ? DEFAULT_TEMPLATE_VARIANT
+                     : 'default';
+
+        $paths = array(
+            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$variant,
+            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/default',
+            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css',
+            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE,
+            dirname(__FILE__).'/config/custom',
+            dirname(__FILE__).'/config/default',
+        );
+
         foreach( $css as $i => $file )
         {
-            if( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/'.$file);
-            elseif( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$file);
-            elseif( defined('DEFAULT_TEMPLATE_VARIANT') && file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.DEFAULT_TEMPLATE_VARIANT.'/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/'.DEFAULT_TEMPLATE_VARIANT.'/'.$file);
-            elseif( file_exists(sanitize_path(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/default/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/css/default/'.$file);
-            elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/custom/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/modules/ckeditor4/config/custom/'.$file );
-            elseif( file_exists(sanitize_path(dirname(__FILE__).'/config/default/'.$file)) )
-                $css[$i] = sanitize_url(CAT_URL.'/modules/ckeditor4/config/default/'.$file );
-            else
-                unset($css[$i]);
+            foreach($paths as $path)
+            {
+                $filename = CAT_Helper_Directory::sanitizePath($path.'/'.$file);
+                if(file_exists($filename))
+                {
+                    $css[$i] = str_ireplace(CAT_Helper_Directory::sanitizePath(CAT_PATH),CAT_URL,$filename);
+                    continue 2;
+                }
+            }
         }
+    }
+
+    if(file_exists(CAT_Helper_Directory::sanitizePath(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/js/styles.js')))
+    {
+        $config[] = array(
+            'set_name' => 'stylesSet',
+            'set_value' => DEFAULT_TEMPLATE.':'.CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/js/styles.js'
+        );
     }
 
     if($filemanager_plugin)

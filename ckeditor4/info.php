@@ -45,7 +45,7 @@ if (defined('CAT_PATH')) {
 $module_directory	= 'ckeditor4';
 $module_name		= 'CKEditor v4.x';
 $module_function	= 'WYSIWYG';
-$module_version		= '0.14';
+$module_version		= '0.15';
 $module_platform	= '1.x';
 $module_author		= 'Black Cat Development';
 $module_license		= '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
