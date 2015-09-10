@@ -23,11 +23,17 @@ CKEDITOR.plugins.add( 'droplets', {
 });
 
 CKEDITOR.plugins.setLang( 'droplets', 'en', {
-    title : 'Insert Droplet',
-    label : 'Available Droplets'
+    title  : 'Insert Droplet',
+    label  : 'Available Droplets',
+    descr  : 'Description',
+    edit   : 'Edit Droplet before adding',
+    comment: 'Comment'
 });
 
 CKEDITOR.plugins.setLang( 'droplets', 'de', {
-    title : 'Droplet einfügen',
-    label : 'Verfügbare Droplets'
+    title  : 'Droplet einfügen',
+    label  : 'Verfügbare Droplets',
+    descr  : 'Beschreibung',
+    edit   : 'Droplet vor dem Einfügen bearbeiten',
+    comment: 'Kommentar'
 });

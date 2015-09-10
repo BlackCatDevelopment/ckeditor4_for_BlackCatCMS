@@ -45,15 +45,12 @@ $LANG = array(
     'Choose a Droplet' => 'Droplet wählen',
     'Available Droplets' => 'Verfügbare Droplets',
     'Comment' => 'Kommentar',
-    'insertpre_class' => 'CSS Klasse für &lt;pre&gt; Element',
-    'insertpre_style' => 'Style-Angabe(n) für &lt;pre&gt; Element',
-    'allowedContent' => 'Advanced Content Filter (ACF) deaktivieren (Details hierzu siehe <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter">http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter</a>)',
-    'autoParagraph' => 'Bestimmt, ob Inline-Inhalte innerhalb des Body in Blöcke eingefaßt werden.',
-    'autoGrow_minHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Minimale Höhe des Eingabebereichs bei Verwendung von autoGrow',
-    'autoGrow_maxHeight' => '<span style="color:red;">Erfordert autogrow Plugin</span> Maximale Höhe des Eingabebereichs bei Verwendung von autoGrow',
-    'autoGrow_onStartup' => '<span style="color:red;">Erfordert autogrow Plugin</span> Beim Start ausführen',
-    'codemirror_theme' => '<span style="color:red;">erfordert codemirror Plugin</span> CodeMirror Skin - wird bei der Quelltextansicht verwendet',
-    'contentsCss' => 'CSS Datei(en) für das Styling der Editorinhalte. Diese sollte(n) zum Frontend-Template passen. Mehrere Dateien mit Komma separieren.',
+    'Activate Advanced Content Filter (ACF)' => 'Advanced Content Filter (ACF) aktivieren',
+    'Additional CSS files' => 'Weitere CSS-Dateien',
+    'editorCSS, please add at lease custom.css and font-awesome.min.css if you\'ve activated the fontawesome-Plugin'
+        => 'editorCSS, bitte mindestens custom.css und font-awesome.min.css (falls fontawesome-Plugin aktiviert ist) hinzufügen',
+    'For details please visit <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter" target="_blank">http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter</a>'
+        => 'Mehr Details unter <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter" target="_blank">http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter</a>',
     'CKEditor v4.0 does not have traditional toolbars. See <a href="http://docs.ckeditor.com/#!/guide/dev_toolbar">'
     . 'http://docs.ckeditor.com/#!/guide/dev_toolbar</a> to learn how to configure the toolbar.'
         =>  'CKEditor v4.0 besitzt keine traditionellen Toolbars mehr. Lesen Sie die Dokumentation unter '

@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  *   @author          Black Cat Development
- *   @copyright       2013, Black Cat Development
+ *   @copyright       2013 - 2015 Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
  *   @category        CAT_Modules
@@ -53,21 +53,21 @@ if (defined('CAT_PATH')) {
 function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $print = true) {
 
     // get settings
-    $query   = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
-    $result  = CAT_Helper_Array::getInstance()->db()->query(sprintf($query,CAT_TABLE_PREFIX,WYSIWYG_EDITOR));
+    $query   = "SELECT * from `:prefix:mod_wysiwyg_admin_v2` where `editor`=:name";
+    $result  = CAT_Helper_Array::getInstance()->db()->query($query,array('name'=>WYSIWYG_EDITOR));
     $config  = array();
     $css     = array();
     $plugins = NULL;
     $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = NULL;
-    if($result->numRows())
+    if($result->rowCount())
     {
-        while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
+        while( false !== ( $row = $result->fetch() ) )
         {
             switch( $row['set_name'] )
             {
                 case 'allowedContent':
                     if($row['set_value'] == 'true')
-                        $config[] = $row;
+                        $config[] = array('set_name'=>'allowedContent','set_value'=>true);
                     break;
                 case 'contentsCss':
                     if ( substr_count($row['set_value'],',') )

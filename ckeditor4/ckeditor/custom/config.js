@@ -39,4 +39,5 @@ CKEDITOR.editorConfig = function( config ) {
                 'Link', 'Unlink', 'Anchor', 'Image', 'cmsplink', '-',
             ]}
         ];
+    config.removePlugins = 'forms,templates,language,iframe';
 };

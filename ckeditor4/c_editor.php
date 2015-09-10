@@ -46,62 +46,156 @@ if (true === $debug) {
 	error_reporting(E_ALL|E_STRICT);
 }
 
-require sanitize_path(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_base.php'));
+require CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_base.php'));
 
-final class c_editor extends c_editor_base
+if(!class_exists('c_editor',false))
 {
-
-    protected static $default_skin = 'moono';
-    protected static $editor_package = 'standard';
-
-    public function getFilemanagerPath()
+    final class c_editor extends c_editor_base
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/filemanager'));
-    }
 
-    public function getSkinPath()
-    {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/skins'));
-    }
+        protected static $default_skin = 'moono';
+        protected static $editor_package = 'standard';
 
-    public function getPluginsPath()
-    {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/plugins'));
-    }
+        public function getFilemanagerPath()
+        {
+            return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/filemanager'));
+        }
 
-    public function getToolbars()
-    {
-        return array( 'Full', 'Smart', 'Simple' );
-    }
+        public function getSkinPath()
+        {
+            return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/skins'));
+        }
 
-    public function getAdditionalSettings()
-    {
-        return array(
-            array( 'name' => 'allowedContent'    , 'type' => 'boolean', 'default' => 'false'      ),
-            array( 'name' => 'autoParagraph'     , 'type' => 'boolean', 'default' => 'false'      ),
-            array( 'name' => 'contentsCss'       , 'type' => 'text'   , 'default' => 'editor.css' ),
-            array( 'name' => 'insertpre_class'   , 'type' => 'text'   , 'default' => ''           ),
-            array( 'name' => 'insertpre_style'   , 'type' => 'text'   , 'default' => ''           ),
-            array( 'name' => 'autoGrow_minHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 200          ),
-            array( 'name' => 'autoGrow_maxHeight', 'requires' => 'autogrow', 'type' => 'text'   , 'default' => 400          ),
-            array( 'name' => 'autoGrow_onStartup', 'requires' => 'autogrow', 'type' => 'boolean', 'default' => 'true'       ),
-            array( 'name' => 'codemirror_theme'  , 'requires' => 'codemirror', 'type' => 'select' , 'default' => 'default',
-                'options' => array('default','ambiance','blackboard','cobalt','eclipse','elegant','erlang-dark','lesser-dark','monokai','neat','night','rubyblue','twilight','vibrant-ink','xq-dark')
-            ),
-        );
-    }
+        public function getPluginsPath()
+        {
+            return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/plugins'));
+        }
 
-    public function getAdditionalPlugins()
-    {
-        $defaults = array( 'ajax', 'a11yhelp', 'about', 'clipboard', 'cmsplink', 'dialog', 'droplets',
-                           'fakeobjects', 'floatpanel', 'image', 'insertpre', 'link', 'magicline', 'pastefromword',
-                           'panel', 'panelbutton', 'richcombo', 'scayt', 'specialchar', 'table', 'tabletools', 'wsc', 'xml' );
-        $path     = $this->getPluginsPath();
-        $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
-        // remove defaults from subs
-        $plugins  = array_diff($subs,$defaults);
-        if(count($plugins)) return $plugins;
-        return array();
-    }
+        public function getToolbars()
+        {
+            return array( 'Full', 'Smart', 'Simple' );
+        }
 
+        /**
+         * - scans the plugin directories for info.php
+         * - retrieves the requirements from that file
+         *
+         * @access public
+         * @return array
+         **/
+        public function getAdditionalSettings()
+        {
+            // defaults - always there
+            $options = array(
+                array(
+                    'name'    => 'allowedContent',
+                    'label'   => 'Activate Advanced Content Filter (ACF)',
+                    'help'    => 'For details please visit <a href="http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter" target="_blank">http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter</a>',
+                    'type'    => 'boolean',
+                    'default' => 'false'
+                ),
+                array(
+                    'name'    => 'contentsCss',
+                    'label'   => 'Additional CSS files',
+                    'help'    => 'editorCSS, please add at lease custom.css and font-awesome.min.css if you\'ve activated the fontawesome-Plugin',
+                    'type'    => 'text',
+                    'default' => 'editor.css'
+                ),
+            );
+
+            // get configuration for optional plugins, located in <plugindir>/info.php
+            $basedir = dirname(__FILE__).'/ckeditor/plugins';
+            $plugins = CAT_Helper_Directory::getInstance(1)
+                     ->setRecursion(true)
+                     ->maxRecursionDepth(2)
+                     ->findFiles('info.php',$basedir,$basedir.'/');
+
+            if(is_array($plugins) && count($plugins))
+            {
+                foreach(array_values($plugins) as $file)
+                {
+                    $plugin_config = array(); // reset
+                    @include($basedir.$file);
+                    if(is_array($plugin_config))
+                    {
+                        if(isset($plugin_config['opt']))
+                        {
+                            foreach($plugin_config['opt'] as $opt)
+                            {
+                                array_push($options, $opt);
+                            }
+                        }
+                    }
+                    // there may also be a language file
+                    $langfile = CAT_Helper_Directory::sanitizePath($basedir.pathinfo($file,PATHINFO_DIRNAME).'/languages/'.LANGUAGE.'.php');
+                    if(file_exists($langfile))
+                    {
+                        CAT_Helper_Directory::getInstance(1)->lang()->addFile(
+                            LANGUAGE.'.php', pathinfo($langfile,PATHINFO_DIRNAME)
+                        );
+                    }
+                }
+            }
+
+            return $options;
+        }
+
+        public function getAdditionalPlugins()
+        {
+            // this is the list of plugins that are already included; this inhibits
+            // that they are listed as optional plugins in the WYSIWYG Admin
+            $defaults = array( 'a11yhelp', 'about', 'ajax', 'clipboard', 'cmsplink', 'colordialog',
+                               'dialog', 'div', 'droplets', 'find', 'flash', 'forms', 'iframe', 'image',
+                               'link', 'liststyle', 'magicline', 'pagebreak', 'pastefromword', 'preview',
+                               'scayt', 'showblocks', 'smiley', 'specialchar',
+                               'table', 'tabletools', 'templates', 'wsc', 'xml' );
+            $path     = $this->getPluginsPath();
+            $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
+            // remove defaults from subs
+            $plugins  = array_diff($subs,$defaults);
+            if(count($plugins)) return $plugins;
+            return array();
+        }
+
+        /**
+         *
+         * @access public
+         * @return
+         **/
+        public function getFrontendCSS()
+        {
+            // get configuration for optional plugins, located in <plugindir>/info.php
+            $basedir = dirname(__FILE__).'/ckeditor/plugins';
+            $plugins = CAT_Helper_Directory::getInstance(1)
+                     ->setRecursion(true)
+                     ->maxRecursionDepth(2)
+                     ->findFiles('info.php',$basedir,$basedir.'/');
+
+            if(is_array($plugins) && count($plugins))
+            {
+                $css = array();
+                foreach(array_values($plugins) as $file)
+                {
+                    $plugin_config = array(); // reset
+                    @include($basedir.$file);
+                    if(is_array($plugin_config))
+                    {
+                        if(isset($plugin_config['css']) && isset($plugin_config['css']['frontend']))
+                        {
+                            foreach($plugin_config['css']['frontend'] as $opt)
+                            {
+                                // fix relative paths
+                                if(substr_compare(pathinfo($file,PATHINFO_DIRNAME), $opt, 0, strlen(pathinfo($file,PATHINFO_DIRNAME))+1))
+                                {
+                                    $opt = CAT_Helper_Directory::sanitizePath(pathinfo($file,PATHINFO_DIRNAME).'/'.$opt);
+                                }
+                                array_push($css, $opt);
+                            }
+                        }
+                    }
+                }
+                return $css;
+            }
+        }   // end function getFrontendCSS()
+    }   // ----- end class c_editor -----
 }

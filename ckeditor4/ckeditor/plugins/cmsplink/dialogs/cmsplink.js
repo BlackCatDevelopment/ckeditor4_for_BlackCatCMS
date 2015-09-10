@@ -92,6 +92,8 @@ CKEDITOR.dialog.add( 'cmsplinkDlg', function( editor ) {
                     html = pages[page_id];
                 }
                 selection = CKEDITOR.dom.element.createFromHtml( html );
+                // remove "--" prefix
+                selection.setText(selection.getText().replace(/^-+/g,''));
             }
             var css_class = dialog.getValueOf( 'tab1', 'pagelinkclass' );
             var rel       = dialog.getValueOf( 'tab1', 'cmbRel' );
