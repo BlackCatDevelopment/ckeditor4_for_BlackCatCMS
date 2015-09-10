@@ -39,5 +39,15 @@ CKEDITOR.editorConfig = function( config ) {
                 'Link', 'Unlink', 'Anchor', 'Image', 'cmsplink', '-',
             ]}
         ];
-    config.removePlugins = 'forms,templates,language,iframe';
+    config.removePlugins = 'forms,language,iframe';
+
+    config.extraAllowedContent ={
+        'div span p a em strong ': {
+            attributes: ['itemscope','itemtype','itemprop'],
+        },
+        'time':{
+            attributes: ['itemprop','datetime']
+        }
+    };
+
 };
