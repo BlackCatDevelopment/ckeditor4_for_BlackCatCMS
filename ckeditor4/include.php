@@ -80,7 +80,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
                     break;
                 case 'filemanager':
                     $filemanager_dirname = $row['set_value'];
-                    $infofile = CAT_Helper_Page::getInstance->sanitizePath(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
+                    $infofile = CAT_Helper_Page::getInstance()->sanitizePath(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
                     if(file_exists($infofile))
                     {
                         $filemanager_include = NULL;
