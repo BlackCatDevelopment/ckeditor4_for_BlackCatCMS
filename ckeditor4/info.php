@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  *   @author          Black Cat Development
- *   @copyright       2013 - 2015, Black Cat Development
+ *   @copyright       2013 - 2016 Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
  *   @category        CAT_Modules
@@ -23,34 +23,31 @@
  *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
-if (defined('CAT_PATH')) {	
-	include(CAT_PATH.'/framework/class.secure.php'); 
+if (defined('CAT_PATH')) {
+	include CAT_PATH.'/framework/class.secure.php';
 } else {
-	$oneback = "../";
-	$root = $oneback;
+	$root = "../";
 	$level = 1;
 	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-		$root .= $oneback;
+		$root .= "../";
 		$level += 1;
 	}
-	if (file_exists($root.'/framework/class.secure.php')) { 
-		include($root.'/framework/class.secure.php'); 
+	if (file_exists($root.'/framework/class.secure.php')) {
+		include $root.'/framework/class.secure.php';
 	} else {
 		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 	}
 }
-// end include class.secure.php
 
 $module_directory	= 'ckeditor4';
 $module_name		= 'CKEditor v4.x';
 $module_function	= 'WYSIWYG';
-$module_version		= '1.1 Beta';
+$module_version		= '1.2';
 $module_platform	= '1.x';
 $module_author		= 'Black Cat Development';
 $module_license		= '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
 $module_license_terms = '-';
-$module_description = 'includes CKEditor 4.5.3; CKE allows editing content and can be integrated in frontend and backend modules.';
+$module_description = 'includes CKEditor 4.5.9; CKE allows editing content and can be integrated in frontend and backend modules.';
 $module_guid 		= '002870FF-37A7-4D47-9712-318D1B4E450A';
 $module_home		= 'http://blackcat-cms.org';
 
