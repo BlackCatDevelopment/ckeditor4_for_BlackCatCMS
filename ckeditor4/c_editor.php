@@ -46,7 +46,7 @@ if (true === $debug) {
 	error_reporting(E_ALL|E_STRICT);
 }
 
-require sanitize_path(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_base.php'));
+require CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/../wysiwyg_admin/c_editor_base.php'));
 
 final class c_editor extends c_editor_base
 {
@@ -56,17 +56,17 @@ final class c_editor extends c_editor_base
 
     public function getFilemanagerPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/filemanager'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/filemanager'));
     }
 
     public function getSkinPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/skins'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/skins'));
     }
 
     public function getPluginsPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/ckeditor/plugins'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/ckeditor/plugins'));
     }
 
     public function getToolbars()
