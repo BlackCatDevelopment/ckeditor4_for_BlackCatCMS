@@ -61,7 +61,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = NULL;
     if($result->numRows())
     {
-        while( false !== ( $row = $result->fetchRow(MYSQL_ASSOC) ) )
+        while( false !== ( $row = $result->fetchRow() ) )
         {
             switch( $row['set_name'] )
             {
