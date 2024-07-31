@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  *   @author          Black Cat Development
- *   @copyright       2013, Black Cat Development
+ *   @copyright       2013 - 2015 Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
  *   @category        CAT_Modules
@@ -23,25 +23,31 @@
  *
  */
 
-if (defined('CAT_PATH')) {	
-	include(CAT_PATH.'/framework/class.secure.php'); 
+if (defined("CAT_PATH")) {
+  include CAT_PATH . "/framework/class.secure.php";
 } else {
-	$root = "../";
-	$level = 1;
-	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-		$root .= "../";
-		$level += 1;
-	}
-	if (file_exists($root.'/framework/class.secure.php')) { 
-		include($root.'/framework/class.secure.php'); 
-	} else {
-		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-	}
+  $root = "../";
+  $level = 1;
+  while ($level < 10 && !file_exists($root . "/framework/class.secure.php")) {
+    $root .= "../";
+    $level += 1;
+  }
+  if (file_exists($root . "/framework/class.secure.php")) {
+    include $root . "/framework/class.secure.php";
+  } else {
+    trigger_error(
+      sprintf(
+        "[ <b>%s</b> ] Can't include class.secure.php!",
+        $_SERVER["SCRIPT_NAME"]
+      ),
+      E_USER_ERROR
+    );
+  }
 }
 
 /**
  *	Function called by parent, default by the wysiwyg-module
- *	
+ *
  * @access public
  * @param  string  $name    - textarea name
  * @param  string  $id      - textarea id
@@ -50,126 +56,164 @@ if (defined('CAT_PATH')) {
  * @param  string  $height  - height - overloaded by settings
  * @param  boolean $print   - direct print (default) or return string
  **/
-function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $print = true) {
-
-    // get settings
-    $query   = "SELECT * from `%smod_wysiwyg_admin_v2` where `editor`='%s'";
-    $result  = CAT_Helper_Array::getInstance()->db()->query(sprintf($query,CAT_TABLE_PREFIX,WYSIWYG_EDITOR));
-    $config  = array();
-    $css     = array();
-    $plugins = NULL;
-    $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = NULL;
-    if($result->numRows())
-    {
-        while( false !== ( $row = $result->fetchRow() ) )
-        {
-            switch( $row['set_name'] )
-            {
-                case 'allowedContent':
-                    if($row['set_value'] == 'true')
-                        $config[] = $row;
-                    break;
-                case 'contentsCss':
-                    if ( substr_count($row['set_value'],',') )
-                        $css = explode(',',$row['set_value']);
-                    else
-                        $css = array($row['set_value']);
-                    break;
-                case 'plugins':
-                    $plugins = $row['set_value'];
-                    break;
-                case 'filemanager':
-                    $filemanager_dirname = $row['set_value'];
-                    $infofile = CAT_Helper_Page::getInstance()->sanitizePath(dirname(__FILE__).'/ckeditor/filemanager/'.$filemanager_dirname.'/info.php');
-                    if(file_exists($infofile))
-                    {
-                        $filemanager_include = NULL;
-                        @include $infofile;
-                        if($filemanager_include)
-                        {
-                            $filemanager_include = str_replace('{$CAT_URL}',CAT_URL,$filemanager_include);
-                        }
-                    }
-                    break;
-                case 'toolbar':
-                    if($row['set_value'] !== 'Full')
-                        $toolbar = $row['set_value'];
-                    break;
-                default:
-                    if ( substr_count( $row['set_value'], '#####' ) ) // array values
-                        $row['set_value'] = explode( '#####', $row['set_value'] );
-                    $config[] = $row;
-                    break;
-            }   // end switch
-        }
-    }
-
-    if(count($css))
-    {
-
-        global $page_id;
-        $variant  = CAT_Helper_Page::getPageSettings($page_id,'internal','template_variant');
-        if(!$variant)
-            $variant = ( defined('DEFAULT_TEMPLATE_VARIANT') && DEFAULT_TEMPLATE_VARIANT != '' )
-                     ? DEFAULT_TEMPLATE_VARIANT
-                     : 'default';
-
-        $paths = array(
-            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/'.$variant,
-            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css/default',
-            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/css',
-            CAT_PATH.'/templates/'.DEFAULT_TEMPLATE,
-            dirname(__FILE__).'/config/custom',
-            dirname(__FILE__).'/config/default',
-        );
-
-        foreach( $css as $i => $file )
-        {
-            foreach($paths as $path)
-            {
-                $filename = CAT_Helper_Directory::sanitizePath($path.'/'.$file);
-                if(file_exists($filename))
-                {
-                    $css[$i] = str_ireplace(CAT_Helper_Directory::sanitizePath(CAT_PATH),CAT_URL,$filename);
-                    continue 2;
-                }
+function show_wysiwyg_editor(
+  $name,
+  $id,
+  $content,
+  $width = "100%",
+  $height = "250px",
+  $print = true
+) {
+  // get settings
+  $query = "SELECT * from `:prefix:mod_wysiwyg_admin_v2` where `editor`=:name";
+  $result = CAT_Helper_Array::getInstance()
+    ->db()
+    ->query($query, ["name" => WYSIWYG_EDITOR]);
+  $config = [];
+  $css = [];
+  $plugins = null;
+  $filemanager_dirname = $filemanager_include = $filemanager_plugin = $toolbar = null;
+  if ($result->rowCount()) {
+    while (false !== ($row = $result->fetch())) {
+      switch ($row["set_name"]) {
+        case "allowedContent":
+          if ($row["set_value"] == "true") {
+            $config[] = ["set_name" => "allowedContent", "set_value" => true];
+          }
+          break;
+        case "contentsCss":
+          if (substr_count($row["set_value"], ",")) {
+            $css = explode(",", $row["set_value"]);
+          } else {
+            $css = [$row["set_value"]];
+          }
+          break;
+        case "plugins":
+          $plugins = $row["set_value"];
+          break;
+        case "filemanager":
+          $filemanager_dirname = $row["set_value"];
+          $infofile = sanitize_path(
+            dirname(__FILE__) .
+              "/ckeditor/filemanager/" .
+              $filemanager_dirname .
+              "/info.php"
+          );
+          if (file_exists($infofile)) {
+            $filemanager_include = null;
+            @include $infofile;
+            if ($filemanager_include) {
+              $filemanager_include = str_replace(
+                '{$CAT_URL}',
+                CAT_URL,
+                $filemanager_include
+              );
             }
-        }
+          }
+          break;
+        case "toolbar":
+          if ($row["set_value"] !== "Full") {
+            $toolbar = $row["set_value"];
+          }
+          break;
+        default:
+          if (substr_count($row["set_value"], "#####")) {
+            // array values
+            $row["set_value"] = explode("#####", $row["set_value"]);
+          }
+          $config[] = $row;
+          break;
+      } // end switch
     }
+  }
 
-    if(file_exists(CAT_Helper_Directory::sanitizePath(CAT_PATH.'/templates/'.DEFAULT_TEMPLATE.'/js/styles.js')))
-    {
-        $config[] = array(
-            'set_name' => 'stylesSet',
-            'set_value' => DEFAULT_TEMPLATE.':'.CAT_URL.'/templates/'.DEFAULT_TEMPLATE.'/js/styles.js'
-        );
-    }
-
-    if($filemanager_plugin)
-    {
-        $plugins = ( $plugins == '' )
-                 ? $filemanager_plugin
-                 : $plugins.','.$filemanager_plugin;
-    }
-
-    global $parser;
-    $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
-    $output = $parser->get(
-        'wysiwyg',
-        array(
-            'name'    => $name,
-            'id'      => $id,
-            'width'   => $width,
-            'height'  => $height,
-            'config'  => $config,
-            'plugins' => $plugins,
-            'toolbar' => $toolbar,
-            'css'     => implode( '\', \'', $css ),
-            'content' => htmlspecialchars(str_replace(array('&gt;','&lt;','&quot;','&amp;'),array('>','<','"','&'),$content)),
-            'filemanager_include' => $filemanager_include,
-        )
+  if (count($css)) {
+    global $page_id;
+    $variant = CAT_Helper_Page::getPageSettings(
+      $page_id,
+      "internal",
+      "template_variant"
     );
-    if($print) echo $output;
-    return $output;
+    if (!$variant) {
+      $variant =
+        defined("DEFAULT_TEMPLATE_VARIANT") && DEFAULT_TEMPLATE_VARIANT != ""
+          ? DEFAULT_TEMPLATE_VARIANT
+          : "default";
+    }
+
+    $paths = [
+      CAT_PATH . "/templates/" . DEFAULT_TEMPLATE . "/css/" . $variant,
+      CAT_PATH . "/templates/" . DEFAULT_TEMPLATE . "/css/default",
+      CAT_PATH . "/templates/" . DEFAULT_TEMPLATE . "/css",
+      CAT_PATH . "/templates/" . DEFAULT_TEMPLATE,
+      dirname(__FILE__) . "/config/custom",
+      dirname(__FILE__) . "/config/default",
+    ];
+
+    foreach ($css as $i => $file) {
+      foreach ($paths as $path) {
+        $filename = CAT_Helper_Directory::sanitizePath($path . "/" . $file);
+        if (file_exists($filename)) {
+          $css[$i] = str_ireplace(
+            CAT_Helper_Directory::sanitizePath(CAT_PATH),
+            CAT_URL,
+            $filename
+          );
+          continue 2;
+        }
+      }
+    }
+  }
+
+  if (
+    file_exists(
+      CAT_Helper_Directory::sanitizePath(
+        CAT_PATH . "/templates/" . DEFAULT_TEMPLATE . "/js/styles.js"
+      )
+    )
+  ) {
+    $config[] = [
+      "set_name" => "stylesSet",
+      "set_value" =>
+        DEFAULT_TEMPLATE .
+        ":" .
+        CAT_URL .
+        "/templates/" .
+        DEFAULT_TEMPLATE .
+        "/js/styles.js",
+    ];
+  }
+
+  if ($filemanager_plugin) {
+    $plugins =
+      $plugins == ""
+        ? $filemanager_plugin
+        : $plugins . "," . $filemanager_plugin;
+  }
+
+  global $parser;
+  $parser->setPath(realpath(dirname(__FILE__) . "/templates/default"));
+  $output = $parser->get("wysiwyg", [
+    "name" => $name,
+    "id" => $id,
+    "width" => $width,
+    "height" => $height,
+    "config" => $config,
+    "plugins" => $plugins,
+    "toolbar" => $toolbar,
+    "css" => implode('\', \'', $css),
+    "content" => htmlspecialchars(
+      str_replace(
+        ["&gt;", "&lt;", "&quot;", "&amp;"],
+        [">", "<", '"', "&"],
+        $content ?? ""
+      )
+    ),
+    "filemanager_include" => $filemanager_include,
+  ]);
+  if ($print) {
+    echo $output;
+  }
+  return $output;
 }
 ?>
